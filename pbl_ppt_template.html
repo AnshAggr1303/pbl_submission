@@ -1,179 +1,1033 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PBL Presentation | 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { background-color: #020617; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .gradient-text { background: linear-gradient(90deg, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        /* TIMER UI - FIXED CONTRAST */
-        #timerContainer { background: #ffffff; color: #020617; box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 3px solid #3b82f6; z-index: 1000; }
-        @keyframes flicker { 0%, 100% { background-color: #ffffff; } 50% { background-color: #fca5a5; } }
-        .timer-warning { animation: flicker 1s infinite; border: 3px solid #ef4444 !important; color: #b91c1c !important; }
-        .timer-stop { background-color: #991b1b !important; color: #ffffff !important; border: 3px solid #f87171 !important; animation: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Inventory — PBL 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --indigo:#1E0CDE;
+  --indigo-mid:#3D3BF3;
+  --indigo-light:#EEEEFD;
+  --surface:#FAFAEF;
+  --surface-low:#F5F4EA;
+  --on-surface:#1B1C16;
+  --muted:#8A897F;
+  --amber:#F59E0B;
+  --green:#10B981;
+  --red:#F43F5E;
+  --teal:#0F6E56;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--on-surface);
+  color:var(--surface);
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* ── NOISE GRAIN OVERLAY ── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:1000;
+  opacity:0.4;
+}
+
+/* ── TIMER ── */
+#timer{
+  position:fixed;
+  bottom:2rem;
+  right:2rem;
+  z-index:999;
+  background:#fff;
+  color:var(--on-surface);
+  border:2px solid var(--indigo-mid);
+  border-radius:999px;
+  padding:0.75rem 1.5rem;
+  font-family:'DM Mono',monospace;
+  font-size:1.1rem;
+  font-weight:500;
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+#timer.warn{border-color:var(--amber);animation:pulse-warn 1s infinite}
+#timer.stop{background:var(--red);color:#fff;border-color:var(--red)}
+@keyframes pulse-warn{0%,100%{background:#fff}50%{background:#FEF3C7}}
+.timer-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite}
+#timer.warn .timer-dot{background:var(--amber)}
+#timer.stop .timer-dot{background:#fff;animation:none}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ── NAV ── */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:1.25rem 3rem;
+  background:rgba(27,28,22,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(250,250,239,0.06);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:1rem;
+}
+.nav-logo img{height:36px;width:36px;object-fit:contain;border-radius:6px;background:#fff;padding:3px}
+.nav-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;letter-spacing:-0.01em;line-height:1.2}
+.nav-brand span{color:var(--indigo-mid)}
+.nav-sub{font-size:0.6rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:2px}
+.nav-links{display:flex;gap:2.5rem}
+.nav-links a{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--surface)}
+
+/* ── SECTIONS ── */
+main{max-width:1100px;margin:0 auto;padding:0 2rem}
+section{padding:7rem 0}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding-top:8rem;
+  position:relative;
+}
+.hero-eyebrow{
+  font-family:'DM Mono',monospace;
+  font-size:0.7rem;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--indigo-mid);
+  margin-bottom:2rem;
+  display:flex;
+  align-items:center;
+  gap:1rem;
+}
+.hero-eyebrow::before{content:'';width:40px;height:1px;background:var(--indigo-mid)}
+.hero-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(3.5rem,8vw,6.5rem);
+  font-weight:800;
+  line-height:0.95;
+  letter-spacing:-0.03em;
+  margin-bottom:2rem;
+}
+.hero-title .accent{
+  display:block;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(250,250,239,0.25);
+}
+.hero-title .filled{
+  display:block;
+  background:linear-gradient(135deg,var(--surface) 0%,rgba(250,250,239,0.7) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.hero-sub{
+  font-size:1.05rem;
+  color:var(--muted);
+  max-width:520px;
+  line-height:1.7;
+  margin-bottom:3rem;
+  padding-left:1.5rem;
+  border-left:2px solid var(--indigo-mid);
+}
+.hero-meta{
+  display:flex;
+  gap:3rem;
+  flex-wrap:wrap;
+}
+.hero-stat{border-top:1px solid rgba(250,250,239,0.1);padding-top:1.25rem}
+.hero-stat-num{
+  font-family:'DM Mono',monospace;
+  font-size:2rem;
+  font-weight:500;
+  color:var(--surface);
+  line-height:1;
+}
+.hero-stat-label{
+  font-size:0.65rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-top:0.4rem;
+}
+
+/* Background grid */
+.hero-grid{
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(61,59,243,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(61,59,243,0.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+}
+.hero-glow{
+  position:absolute;
+  top:20%;right:-10%;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(61,59,243,0.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+/* ── TAGS ── */
+.tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:2.5rem}
+.tag{
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;
+  letter-spacing:0.08em;
+  padding:0.4rem 0.85rem;
+  border-radius:999px;
+  border:1px solid rgba(250,250,239,0.12);
+  color:var(--muted);
+}
+.tag.active{border-color:var(--indigo-mid);color:rgba(250,250,239,0.8)}
+
+/* ── SECTION HEADER ── */
+.sec-header{
+  display:flex;
+  align-items:baseline;
+  gap:1.5rem;
+  margin-bottom:4rem;
+}
+.sec-num{
+  font-family:'DM Mono',monospace;
+  font-size:0.7rem;
+  color:var(--indigo-mid);
+  flex-shrink:0;
+}
+.sec-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  font-weight:700;
+  line-height:1.1;
+  letter-spacing:-0.02em;
+}
+.sec-line{flex:1;height:1px;background:rgba(250,250,239,0.06);margin-left:1rem;align-self:center}
+
+/* ── CARDS ── */
+.card{
+  background:rgba(250,250,239,0.03);
+  border:1px solid rgba(250,250,239,0.07);
+  border-radius:16px;
+  padding:2rem;
+  position:relative;
+  overflow:hidden;
+  transition:border-color 0.3s,transform 0.3s;
+}
+.card:hover{border-color:rgba(250,250,239,0.15);transform:translateY(-2px)}
+.card-accent{
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+}
+.card-accent.indigo{background:linear-gradient(90deg,var(--indigo),var(--indigo-mid))}
+.card-accent.amber{background:var(--amber)}
+.card-accent.green{background:var(--green)}
+.card-accent.teal{background:var(--teal)}
+.card-accent.red{background:var(--red)}
+
+.card-icon{
+  width:44px;height:44px;
+  border-radius:10px;
+  background:rgba(61,59,243,0.15);
+  border:1px solid rgba(61,59,243,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+  margin-bottom:1.25rem;
+}
+.card-title{
+  font-family:'Syne',sans-serif;
+  font-size:1rem;
+  font-weight:700;
+  margin-bottom:0.5rem;
+  letter-spacing:-0.01em;
+}
+.card-sub{
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;
+  letter-spacing:0.08em;
+  color:var(--indigo-mid);
+  text-transform:uppercase;
+  margin-bottom:0.75rem;
+}
+.card-body{font-size:0.85rem;color:var(--muted);line-height:1.7}
+
+/* ── GRID LAYOUTS ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:768px){
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .hero-title{font-size:3rem}
+  main{padding:0 1.25rem}
+}
+
+/* ── CODE BLOCK ── */
+.codeblock{
+  background:#0D0D0B;
+  border:1px solid rgba(250,250,239,0.07);
+  border-radius:10px;
+  padding:1.25rem 1.5rem;
+  font-family:'DM Mono',monospace;
+  font-size:0.78rem;
+  line-height:1.8;
+  color:#9CA3AF;
+  margin-top:1.25rem;
+}
+.codeblock .comment{color:#3D3BF3;opacity:0.7}
+.codeblock .value{color:#FAFAEF}
+.codeblock .warn{color:var(--amber)}
+.codeblock .ok{color:var(--green)}
+
+/* ── PROBLEM SECTION ── */
+.problem-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:3rem;align-items:start}
+.problem-list{list-style:none;margin-top:1.5rem}
+.problem-list li{
+  display:flex;gap:1rem;padding:1rem 0;
+  border-bottom:1px solid rgba(250,250,239,0.06);
+  font-size:0.9rem;color:var(--muted);
+}
+.problem-list li:last-child{border-bottom:none}
+.problem-list .x{color:var(--red);font-family:'DM Mono',monospace;flex-shrink:0}
+.problem-list strong{color:var(--surface)}
+
+/* ── ARCH LAYERS ── */
+.arch-layer{
+  display:flex;
+  align-items:stretch;
+  gap:0;
+  margin-bottom:1px;
+}
+.arch-label{
+  width:160px;
+  flex-shrink:0;
+  padding:1.25rem 1.5rem;
+  background:rgba(250,250,239,0.02);
+  border:1px solid rgba(250,250,239,0.07);
+  border-right:none;
+  border-radius:12px 0 0 12px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.arch-label-name{
+  font-family:'Syne',sans-serif;
+  font-size:0.8rem;
+  font-weight:700;
+  margin-bottom:0.25rem;
+}
+.arch-label-desc{font-size:0.65rem;color:var(--muted)}
+.arch-items{
+  flex:1;
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.5rem;
+  padding:1rem 1.25rem;
+  background:rgba(250,250,239,0.015);
+  border:1px solid rgba(250,250,239,0.07);
+  border-radius:0 12px 12px 0;
+  align-items:center;
+}
+.arch-pill{
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;
+  padding:0.3rem 0.75rem;
+  border-radius:999px;
+  background:rgba(61,59,243,0.12);
+  border:1px solid rgba(61,59,243,0.25);
+  color:rgba(250,250,239,0.7);
+  letter-spacing:0.04em;
+}
+
+/* ── TABLES ── */
+.db-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem}
+.db-item{
+  padding:0.85rem 1rem;
+  background:rgba(250,250,239,0.02);
+  border:1px solid rgba(250,250,239,0.06);
+  border-radius:10px;
+  font-family:'DM Mono',monospace;
+  font-size:0.7rem;
+}
+.db-item .db-name{color:var(--surface);margin-bottom:0.25rem;font-weight:500}
+.db-item .db-desc{color:var(--muted);font-size:0.6rem}
+
+/* ── FEATURES ── */
+.feature-hero{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+  margin-bottom:1.5rem;
+}
+.feature-hero .card{grid-column:1}
+.feature-hero .card.wide{grid-column:1/-1}
+
+/* ── RESULTS ── */
+.metric-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:1.5rem 0;
+  border-bottom:1px solid rgba(250,250,239,0.06);
+}
+.metric-row:last-child{border-bottom:none}
+.metric-label{font-size:0.85rem;color:var(--muted)}
+.metric-sub{font-size:0.7rem;color:rgba(250,250,239,0.25);margin-top:0.2rem}
+.metric-val{
+  font-family:'DM Mono',monospace;
+  font-size:1.8rem;
+  font-weight:500;
+}
+.metric-val.blue{color:#60A5FA}
+.metric-val.purple{color:#C084FC}
+.metric-val.green{color:var(--green)}
+.metric-val.amber{color:var(--amber)}
+
+/* ── DONE / TODO ── */
+.checklist{list-style:none}
+.checklist li{
+  display:flex;gap:0.75rem;
+  padding:0.6rem 0;
+  font-size:0.85rem;
+  border-bottom:1px solid rgba(250,250,239,0.04);
+  color:var(--muted);
+}
+.checklist li:last-child{border-bottom:none}
+.checklist .ck{font-family:'DM Mono',monospace;flex-shrink:0}
+.checklist .ck.done{color:var(--green)}
+.checklist .ck.todo{color:rgba(250,250,239,0.2)}
+
+/* ── TEAM ── */
+.team-cards{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:4rem}
+.team-card{
+  padding:2.5rem 3rem;
+  background:rgba(250,250,239,0.02);
+  border:1px solid rgba(250,250,239,0.07);
+  border-radius:16px;
+  text-align:center;
+  min-width:220px;
+}
+.team-role{
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--indigo-mid);
+  margin-bottom:0.75rem;
+}
+.team-name{
+  font-family:'Syne',sans-serif;
+  font-size:1.3rem;
+  font-weight:700;
+}
+.team-id{font-size:0.75rem;color:var(--muted);margin-top:0.4rem;font-family:'DM Mono',monospace}
+
+/* ── THANK YOU ── */
+.thankyou{
+  text-align:center;
+  padding:6rem 0;
+  border-top:1px solid rgba(250,250,239,0.06);
+}
+.thankyou-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(3rem,7vw,5rem);
+  font-weight:800;
+  letter-spacing:-0.03em;
+  background:linear-gradient(135deg,var(--surface),rgba(250,250,239,0.4));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:1rem;
+}
+.thankyou-quote{
+  font-size:0.9rem;
+  color:var(--muted);
+  font-style:italic;
+  max-width:480px;
+  margin:0 auto 2rem;
+  line-height:1.7;
+}
+.gh-link{
+  display:inline-flex;align-items:center;gap:0.75rem;
+  font-family:'DM Mono',monospace;
+  font-size:0.75rem;
+  color:rgba(250,250,239,0.4);
+  text-decoration:none;
+  letter-spacing:0.05em;
+  transition:color 0.2s;
+  border:1px solid rgba(250,250,239,0.1);
+  padding:0.75rem 1.5rem;
+  border-radius:999px;
+}
+.gh-link:hover{color:var(--surface);border-color:rgba(250,250,239,0.3)}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;
+  padding:2rem;
+  font-family:'DM Mono',monospace;
+  font-size:0.6rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:rgba(250,250,239,0.15);
+  border-top:1px solid rgba(250,250,239,0.04);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.7s ease forwards;opacity:0}
+.fade-up:nth-child(1){animation-delay:0.1s}
+.fade-up:nth-child(2){animation-delay:0.2s}
+.fade-up:nth-child(3){animation-delay:0.3s}
+.fade-up:nth-child(4){animation-delay:0.4s}
+
+/* chart canvas */
+#chart{max-height:280px}
+</style>
 </head>
 <body onload="startTimer()">
 
-    <div id="timerContainer" class="fixed bottom-10 right-10 px-8 py-4 rounded-3xl flex items-center gap-4 transition-all">
-        <i class="fas fa-hourglass-start text-blue-600 text-2xl" id="timerIcon"></i>
-        <span id="displayTime" class="text-4xl font-black font-mono tracking-tighter">00:00</span>
+<!-- TIMER -->
+<div id="timer">
+  <div class="timer-dot" id="dot"></div>
+  <span id="time" style="font-family:'DM Mono',monospace">00:00</span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="mujlogo.jpg" alt="MUJ"
+         onerror="this.src='https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Manipal_University_Jaipur_logo.png/220px-Manipal_University_Jaipur_logo.png'">
+    <div>
+      <div class="nav-brand">PBL <span>2026</span></div>
+      <div class="nav-sub">Dept. of CSE — MUJ</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#problem">Problem</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#features">Features</a>
+    <a href="#results">Results</a>
+    <a href="#team">Team</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+
+    <div class="hero-eyebrow fade-up">23FE10CSE00283 &nbsp;·&nbsp; PBL Project 2026</div>
+
+    <h1 class="hero-title fade-up">
+      <span class="accent">Smart</span>
+      <span class="filled">Inventory</span>
+    </h1>
+
+    <p class="hero-sub fade-up">
+      My friend runs 2 food shops in my college and counts stock
+      in a notebook every night. I built the fix.
+    </p>
+
+    <div class="tags fade-up">
+      <span class="tag active">Next.js 14</span>
+      <span class="tag active">Supabase</span>
+      <span class="tag active">Groq LLM</span>
+      <span class="tag active">Gemini Vision</span>
+      <span class="tag active">Tesseract OCR</span>
+      <span class="tag">TypeScript Strict</span>
+      <span class="tag">TailwindCSS</span>
+      <span class="tag">Vercel Cron</span>
+      <span class="tag">AES-256-GCM</span>
     </div>
 
-    <nav class="fixed w-full z-50 glass border-b border-slate-800/50 px-8 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <div class="bg-white p-1 rounded flex items-center justify-center shadow-md" style="height: 48px; width: 48px;">
-                <img src="mujlogo.jpg" alt="MUJ" class="h-full w-auto object-contain" onerror="this.src='https://via.placeholder.com/50?text=MUJ'">
-            </div>
-            <div class="flex flex-col text-left">
-                <span class="text-xl font-black text-white leading-none uppercase tracking-tighter">PBL <span class="text-blue-500 italic">2026</span></span>
-                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">Dept. of Computer Science & Engineering</span>
-            </div>
+    <div class="hero-meta" style="margin-top:3rem">
+      <div class="hero-stat fade-up">
+        <div class="hero-stat-num" style="color:#60A5FA">9</div>
+        <div class="hero-stat-label">Tasks Shipped</div>
+      </div>
+      <div class="hero-stat fade-up">
+        <div class="hero-stat-num" style="color:#C084FC">11</div>
+        <div class="hero-stat-label">DB Tables</div>
+      </div>
+      <div class="hero-stat fade-up">
+        <div class="hero-stat-num" style="color:var(--green)">3</div>
+        <div class="hero-stat-label">AI Agents</div>
+      </div>
+      <div class="hero-stat fade-up">
+        <div class="hero-stat-num" style="color:var(--amber)">₹0</div>
+        <div class="hero-stat-label">Cost per user</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section id="problem">
+    <div class="sec-header">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">The Problem</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="problem-grid">
+      <div>
+        <p style="font-size:1.05rem;color:var(--muted);line-height:1.8;margin-bottom:1.5rem">
+          Small businesses that hold physical stock — restaurants, pharmacies,
+          kirana stores — are stuck in the same loop. Manual counting. Wasted stock.
+          No visibility. No alerts.
+        </p>
+        <ul class="problem-list">
+          <li><span class="x">—</span><span><strong>Manual counting</strong> every night with a notebook</span></li>
+          <li><span class="x">—</span><span><strong>Over-ordering</strong> paneer weekly because nobody tracks history</span></li>
+          <li><span class="x">—</span><span><strong>Expired stock</strong> thrown away — no expiry alerts</span></li>
+          <li><span class="x">—</span><span><strong>Runs out mid-service</strong> — no forecasting, no reorder automation</span></li>
+          <li><span class="x">—</span><span><strong>Existing tools</strong> cost ₹2000+/month and require an accountant</span></li>
+        </ul>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div class="card">
+          <div class="card-accent indigo"></div>
+          <div class="card-sub">Our approach</div>
+          <div class="card-title">Universal Platform — Any Industry</div>
+          <div class="card-body">
+            Same codebase. Industry selection during onboarding configures
+            labels, templates, and unit defaults. Restaurant calls it "Recipes".
+            Pharmacy calls it "Formulas". Manufacturing calls it "Bill of Materials".
+          </div>
         </div>
-        <div class="hidden md:flex gap-8 text-[11px] uppercase tracking-widest font-bold opacity-70">
-            <a href="#problem" class="hover:text-blue-400 transition">Problem</a>
-            <a href="#methodology" class="hover:text-blue-400 transition">Methodology</a>
-            <a href="#results" class="hover:text-blue-400 transition">Results</a>
-            <a href="#team" class="hover:text-blue-400 transition">Team</a>
+        <div class="card">
+          <div class="card-accent amber"></div>
+          <div class="card-sub">Cost model</div>
+          <div class="card-title">BYOK — Bring Your Own Keys</div>
+          <div class="card-body">
+            Users bring their own free Groq and Gemini API keys.
+            Platform running cost = near zero.
+            Keys encrypted with AES-256-GCM before storage.
+            Never visible in browser.
+          </div>
         </div>
-    </nav>
+      </div>
+    </div>
+  </section>
 
-    <main class="max-w-6xl mx-auto px-6 pt-48 pb-32 space-y-32">
-        
-        <section class="text-center">
-            <div class="inline-block px-4 py-1 border border-slate-800 rounded-full text-slate-500 text-[10px] font-mono mb-6 uppercase tracking-widest">ID: [YOUR_REG_NO]</div>
-            <h1 class="text-6xl md:text-7xl font-extrabold mb-8 uppercase leading-tight"><span class="gradient-text uppercase">[Project Title Here]</span></h1>
-            <p class="text-slate-400 max-w-2xl mx-auto italic text-lg leading-relaxed border-l-2 border-blue-500/30 pl-6 text-left">
-                "Hypothesis/Project Statement: Define the core research question or the primary objective of your development project."
-            </p>
-        </section>
+  <!-- ARCHITECTURE -->
+  <section id="architecture">
+    <div class="sec-header">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">Architecture</h2>
+      <div class="sec-line"></div>
+    </div>
 
-        <section id="problem" class="grid md:grid-cols-2 gap-12 items-stretch">
-            <div class="glass p-10 rounded-[2.5rem] flex flex-col justify-center border-l-4 border-blue-600">
-                <h2 class="text-3xl font-extrabold mb-6">Problem Statement</h2>
-                <p class="text-slate-400 leading-relaxed text-justify">Describe the specific challenge you are addressing. Why is this project necessary?</p>
-            </div>
-            <div class="space-y-6">
-                <div class="glass p-7 rounded-3xl border-r-4 border-blue-500/50">
-                    <h3 class="text-blue-400 font-bold text-xs uppercase tracking-widest mb-2">Literature Review / Market Research</h3>
-                    <p class="text-sm text-slate-500 italic">Summary of existing solutions or research papers analyzed.</p>
-                </div>
-                <div class="glass p-7 rounded-3xl border-r-4 border-purple-500/50">
-                    <h3 class="text-purple-400 font-bold text-xs uppercase tracking-widest mb-2">Research Gap / Innovation</h3>
-                    <p class="text-sm text-slate-500 italic">What makes your approach different or better than the State-of-the-Art?</p>
-                </div>
-            </div>
-        </section>
+    <!-- 3 layer arch -->
+    <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:3rem">
+      <div class="arch-layer">
+        <div class="arch-label">
+          <div class="arch-label-name" style="color:#60A5FA">UI Layer</div>
+          <div class="arch-label-desc">Client-facing</div>
+        </div>
+        <div class="arch-items">
+          <span class="arch-pill">Next.js 14 App Router</span>
+          <span class="arch-pill">Server Components (default)</span>
+          <span class="arch-pill">Client Components (when needed)</span>
+          <span class="arch-pill">Supabase Realtime</span>
+          <span class="arch-pill">Stitch Design System</span>
+          <span class="arch-pill">TailwindCSS</span>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-label">
+          <div class="arch-label-name" style="color:#C084FC">Logic Layer</div>
+          <div class="arch-label-desc">Server-side only</div>
+        </div>
+        <div class="arch-items">
+          <span class="arch-pill">Server Actions (primary)</span>
+          <span class="arch-pill">API Routes (cron + webhooks)</span>
+          <span class="arch-pill">LLM Router (Groq + Gemini)</span>
+          <span class="arch-pill">OCR Pipeline</span>
+          <span class="arch-pill">Recipe Engine</span>
+          <span class="arch-pill">3 AI Agents</span>
+          <span class="arch-pill">AES-256 Crypto</span>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-label">
+          <div class="arch-label-name" style="color:var(--green)">Data Layer</div>
+          <div class="arch-label-desc">Supabase</div>
+        </div>
+        <div class="arch-items">
+          <span class="arch-pill">Postgres (11 tables)</span>
+          <span class="arch-pill">Row Level Security</span>
+          <span class="arch-pill">Postgres Triggers</span>
+          <span class="arch-pill">Supabase Auth</span>
+          <span class="arch-pill">Supabase Storage</span>
+          <span class="arch-pill">Atomic RPCs</span>
+        </div>
+      </div>
+    </div>
 
-        <section id="methodology" class="space-y-12">
-            <h2 class="text-4xl font-black text-center uppercase tracking-tight">System <span class="text-blue-500">Methodology</span></h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass p-8 rounded-3xl text-center">
-                    <i class="fas fa-database text-blue-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">Dataset / Input</h3>
-                    <p class="text-sm text-slate-500">[Source, size, and preprocessing details]</p>
-                </div>
-                <div class="glass p-8 rounded-3xl text-center">
-                    <i class="fas fa-microchip text-purple-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">Model / Architecture</h3>
-                    <p class="text-sm text-slate-500">[Algorithms used or System Workflow]</p>
-                </div>
-                <div class="glass p-8 rounded-3xl text-center border-2 border-green-500/20 bg-green-500/5">
-                    <i class="fab fa-python text-green-500 text-3xl mb-4"></i>
-                    <h3 class="font-bold mb-4 uppercase text-xs tracking-widest text-green-400">Live Execution</h3>
-                    <a href="[LINK]" target="_blank" class="px-6 py-2 bg-green-600 rounded-full text-[10px] font-black hover:bg-green-500 transition shadow-lg shadow-green-900/40">VIEW CODE / DEMO</a>
-                </div>
-            </div>
-        </section>
+    <!-- Key decisions -->
+    <div class="grid-3" style="margin-bottom:3rem">
+      <div class="card">
+        <div class="card-accent indigo"></div>
+        <div class="card-sub">Rule D1</div>
+        <div class="card-title">Stock as a Ledger</div>
+        <div class="card-body">
+          <code>current_stock</code> is never updated directly.
+          Every change inserts a row into <code>transactions</code>.
+          A Postgres trigger computes the new balance atomically.
+          Full audit trail. No race conditions. No corruption.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-accent amber"></div>
+        <div class="card-sub">Rule D2</div>
+        <div class="card-title">Atomic Multi-table Writes</div>
+        <div class="card-body">
+          Bill confirmation, recipe deduction, and item creation
+          all use Postgres RPC functions. Either everything commits
+          or nothing does. Partial saves are impossible by design.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-accent green"></div>
+        <div class="card-sub">Agent design</div>
+        <div class="card-title">Human in the Loop</div>
+        <div class="card-body">
+          All three agents write to <code>agent_actions</code>
+          with <code>status: pending</code>. Nothing executes
+          without explicit user approval. Agents propose.
+          Humans decide.
+        </div>
+      </div>
+    </div>
 
-        <section id="results" class="glass p-12 rounded-[3.5rem] border-t-4 border-blue-500">
-            <h2 class="text-3xl font-black mb-12 text-center uppercase tracking-tight">Results & <span class="text-blue-500">Analysis</span></h2>
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div class="h-80"><canvas id="resultsChart"></canvas></div>
-                <div class="space-y-6">
-                    <div class="p-6 rounded-2xl bg-white/5 flex justify-between items-center border border-white/10 shadow-inner">
-                        <span class="text-slate-400 font-bold uppercase text-xs tracking-widest">Accuracy / Performance</span>
-                        <span class="text-blue-400 font-mono font-black text-3xl">XX.X%</span>
-                    </div>
-                    <p class="text-slate-500 text-sm italic text-justify leading-relaxed">Quantifiable outcomes and evaluation metrics compared to baselines.</p>
-                </div>
-            </div>
-        </section>
+    <!-- DB tables -->
+    <p style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">Database — 11 tables</p>
+    <div class="db-grid">
+      <div class="db-item"><div class="db-name">organisations</div><div class="db-desc">Business + industry config</div></div>
+      <div class="db-item"><div class="db-name">user_profiles</div><div class="db-desc">Extends auth.users</div></div>
+      <div class="db-item"><div class="db-name">user_settings</div><div class="db-desc">Encrypted API keys</div></div>
+      <div class="db-item"><div class="db-name">items</div><div class="db-desc">Master catalogue</div></div>
+      <div class="db-item" style="border-color:rgba(61,59,243,0.3)"><div class="db-name" style="color:#60A5FA">transactions ⭐</div><div class="db-desc">The stock ledger</div></div>
+      <div class="db-item"><div class="db-name">bills</div><div class="db-desc">Scanned invoices</div></div>
+      <div class="db-item"><div class="db-name">recipes</div><div class="db-desc">Formula definitions</div></div>
+      <div class="db-item"><div class="db-name">recipe_ingredients</div><div class="db-desc">Ingredient lines</div></div>
+      <div class="db-item"><div class="db-name">suppliers</div><div class="db-desc">Vendor + price history</div></div>
+      <div class="db-item"><div class="db-name">agent_actions</div><div class="db-desc">AI proposal log</div></div>
+      <div class="db-item"><div class="db-name">unit_conversions</div><div class="db-desc">kg↔g, l↔ml seed</div></div>
+    </div>
+  </section>
 
-        <section id="team" class="text-center pt-10 border-t border-slate-900">
-            <h2 class="text-[10px] font-black text-slate-600 uppercase tracking-[0.5em] mb-12">Academic Credits</h2>
-            <div class="flex flex-wrap justify-center gap-10">
-                <div class="glass px-12 py-8 rounded-[2rem] border-b-4 border-blue-600">
-                    <p class="text-[9px] font-bold text-blue-500 mb-2 uppercase tracking-widest">Project Guide</p>
-                    <p class="font-black text-xl text-slate-100">[Guide Name]</p>
-                </div>
-                <div class="glass px-12 py-8 rounded-[2rem] border-b-4 border-slate-700">
-                    <p class="text-[9px] font-bold text-slate-400 mb-2 uppercase tracking-widest">Team Member 1</p>
-                    <p class="font-black text-xl text-slate-100">[Student Name]</p>
-                    <p class="text-[10px] text-slate-500 mt-1">[Reg No]</p>
-                </div>
-            </div>
-        </section>
-    </main>
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="sec-header">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">What It Does</h2>
+      <div class="sec-line"></div>
+    </div>
 
-    <footer class="py-12 text-center bg-black/40 border-t border-slate-900">
-        <p class="text-slate-600 text-[10px] font-bold tracking-[0.3em] uppercase mb-2">Manipal University Jaipur</p>
-        <p class="text-slate-500 text-[9px] font-medium tracking-[0.2em] uppercase opacity-50">Department of Computer Science & Engineering • 2026</p>
-    </footer>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
 
-    <script>
-        // TIMER LOGIC
-        let sec = 0;
-        let timer = null;
-        function startTimer() {
-            timer = setInterval(() => {
-                sec++;
-                let m = Math.floor(sec / 60);
-                let s = sec % 60;
-                document.getElementById('displayTime').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                
-                if (sec >= 480 && sec < 600) { // 8-10 Mins Warning
-                    document.getElementById('timerContainer').classList.add('timer-warning');
-                    document.getElementById('timerIcon').classList.replace('fa-hourglass-start', 'fa-hourglass-half');
-                } else if (sec >= 600) { // 10 Mins Stop
-                    clearInterval(timer);
-                    document.getElementById('timerContainer').classList.replace('timer-warning', 'timer-stop');
-                    document.getElementById('displayTime').innerText = "10:00";
-                    document.getElementById('timerIcon').classList.replace('fa-hourglass-half', 'fa-hourglass-end');
-                }
-            }, 1000);
-        }
+      <div class="card">
+        <div class="card-accent indigo"></div>
+        <div class="card-icon">📷</div>
+        <div class="card-sub">Tesseract.js + Gemini 2.0 Flash</div>
+        <div class="card-title">OCR Bill Scanner</div>
+        <div class="card-body">
+          Photograph any supplier bill. Client-side Tesseract pre-processes for speed.
+          Gemini Vision extracts items, quantities, units, and prices server-side.
+          Smart token parser handles Indian bill formats across 3 patterns.
+        </div>
+        <div class="codeblock">
+          <span class="comment">// Sample bill → 14 items, one click</span><br>
+          <span class="value">Paneer Fresh</span> → 5 kg @ ₹340<br>
+          <span class="value">Maida</span>        → 10 kg @ ₹38<br>
+          <span class="value">Mustard Oil</span>  → 5 litre @ ₹180<br>
+          <span class="ok">→ all added to inventory instantly</span>
+        </div>
+      </div>
 
-        // RESULTS CHART (Demo Data)
-        const ctx = document.getElementById('resultsChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Existing System', 'Our Solution'],
-                datasets: [{
-                    data: [70, 92],
-                    backgroundColor: ['#1e293b', '#3b82f6'],
-                    borderRadius: 15,
-                    barThickness: 50
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    y: { beginAtZero: true, grid: { color: '#ffffff05' }, ticks: { color: '#475569' } },
-                    x: { grid: { display: false }, ticks: { color: '#475569' } }
-                }
-            }
-        });
-    </script>
+      <div class="card">
+        <div class="card-accent purple" style="background:linear-gradient(90deg,#7C3AED,#C084FC)"></div>
+        <div class="card-icon" style="background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.3)">📖</div>
+        <div class="card-sub">Atomic Postgres RPC + Trigger</div>
+        <div class="card-title">Recipe Engine</div>
+        <div class="card-body">
+          Define recipes once. Sell a dish — all ingredients deduct automatically.
+          Sufficiency check runs server-side before any write.
+          Stock never goes below zero. Low stock triggers agent actions.
+        </div>
+        <div class="codeblock">
+          <span class="comment">// Sell 3× Veg Roll</span><br>
+          Paneer: -300g &nbsp;<span class="value">340g → 40g</span><br>
+          Maida: &nbsp;-150g &nbsp;<span class="value">680g → 530g</span><br>
+          Mayo: &nbsp;&nbsp;-6g &nbsp;&nbsp;&nbsp;<span class="value">120g → 114g</span><br>
+          <span class="warn">⚠ Paneer below reorder point</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem">
+
+      <div class="card" style="grid-column:1/3">
+        <div class="card-accent green"></div>
+        <div class="card-icon" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3)">🤖</div>
+        <div class="card-sub">Groq LLM + Vercel Cron</div>
+        <div class="card-title">3 Autonomous AI Agents</div>
+        <div class="card-body" style="margin-bottom:1.25rem">
+          Independent specialist agents sharing state via Supabase. No direct agent-to-agent communication.
+          Every action requires human approval — agents propose, humans decide.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem">
+          <div style="padding:1rem;background:rgba(61,59,243,0.08);border-radius:10px;border:1px solid rgba(61,59,243,0.2)">
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--indigo-mid);text-transform:uppercase;margin-bottom:0.5rem">Reorder</div>
+            <div style="font-size:0.8rem;color:var(--muted)">Drafts WhatsApp supplier message when item hits threshold. 8AM daily + event-triggered.</div>
+          </div>
+          <div style="padding:1rem;background:rgba(245,158,11,0.08);border-radius:10px;border:1px solid rgba(245,158,11,0.2)">
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--amber);text-transform:uppercase;margin-bottom:0.5rem">Shrinkage</div>
+            <div style="font-size:0.8rem;color:var(--muted)">Weekly variance — expected vs actual. Flags theft or spillage in ₹. Monday 7AM.</div>
+          </div>
+          <div style="padding:1rem;background:rgba(15,110,86,0.12);border-radius:10px;border:1px solid rgba(15,110,86,0.3)">
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:#2dd4bf;text-transform:uppercase;margin-bottom:0.5rem">Forecast</div>
+            <div style="font-size:0.8rem;color:var(--muted)">30-day pattern analysis. Detects weekend demand spikes. 6AM daily briefing.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-accent amber"></div>
+        <div class="card-icon" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.3)">💬</div>
+        <div class="card-sub">Gemini Flash + Fallbacks</div>
+        <div class="card-title">Co-pilot Chat</div>
+        <div class="card-body" style="margin-bottom:1rem">
+          Ask anything about inventory in plain English.
+          Rule-based fallbacks work even without API keys.
+        </div>
+        <div class="codeblock" style="font-size:0.72rem">
+          <span style="color:rgba(250,250,239,0.3)">you →</span> <span class="value">how much paneer left?</span><br><br>
+          <span style="color:rgba(250,250,239,0.3)">ai &nbsp;→</span> You have <span class="warn">40g</span> of Paneer.<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reorder point is 200g.<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--red)">Status: Critical</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results">
+    <div class="sec-header">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">Results</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+      <div>
+        <canvas id="chart"></canvas>
+      </div>
+      <div>
+        <div class="metric-row">
+          <div><div class="metric-label">OCR extraction accuracy</div><div class="metric-sub">Indian structured supplier bills</div></div>
+          <div class="metric-val blue">~90%</div>
+        </div>
+        <div class="metric-row">
+          <div><div class="metric-label">Bill → inventory time</div><div class="metric-sub">Photo upload to stock updated</div></div>
+          <div class="metric-val purple">&lt;5s</div>
+        </div>
+        <div class="metric-row">
+          <div><div class="metric-label">Recipe deduction accuracy</div><div class="metric-sub">Atomic, stock never goes negative</div></div>
+          <div class="metric-val green">100%</div>
+        </div>
+        <div class="metric-row">
+          <div><div class="metric-label">Platform cost per user</div><div class="metric-sub">BYOK — user's own free API keys</div></div>
+          <div class="metric-val amber">₹0</div>
+        </div>
+        <div class="metric-row">
+          <div><div class="metric-label">Industries supported</div><div class="metric-sub">One codebase, industry config layer</div></div>
+          <div class="metric-val" style="color:var(--surface)">6</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATUS -->
+  <section>
+    <div class="sec-header">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">Delivery</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-accent green"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:1.5rem">Phase 1 — Shipped</div>
+        <ul class="checklist">
+          <li><span class="ck done">✓</span>Supabase Auth — email + Google OAuth</li>
+          <li><span class="ck done">✓</span>3-step onboarding with industry picker</li>
+          <li><span class="ck done">✓</span>AES-256-GCM API key encryption</li>
+          <li><span class="ck done">✓</span>Live stock dashboard with Realtime</li>
+          <li><span class="ck done">✓</span>Full inventory management (CRUD)</li>
+          <li><span class="ck done">✓</span>OCR bill scanner (Tesseract + Gemini)</li>
+          <li><span class="ck done">✓</span>Recipe engine with atomic deduction</li>
+          <li><span class="ck done">✓</span>3 AI agents — reorder, shrinkage, forecast</li>
+          <li><span class="ck done">✓</span>Agent approval panel UI</li>
+          <li><span class="ck done">✓</span>Natural language co-pilot</li>
+          <li><span class="ck done">✓</span>Vercel Cron for scheduled agents</li>
+          <li><span class="ck done">✓</span>6 Postgres RPCs + trigger system</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-accent amber"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);margin-bottom:1.5rem">Phase 2 — Roadmap</div>
+        <ul class="checklist">
+          <li><span class="ck todo">○</span>WhatsApp bill entry + reorder messages</li>
+          <li><span class="ck todo">○</span>Swiggy / Zomato / POS auto-sync</li>
+          <li><span class="ck todo">○</span>Voice stock entry</li>
+          <li><span class="ck todo">○</span>Shelf vision camera audit</li>
+          <li><span class="ck todo">○</span>Supplier negotiation agent</li>
+          <li><span class="ck todo">○</span>Team invites / multi-user org</li>
+          <li><span class="ck todo">○</span>Advanced export + reporting</li>
+          <li><span class="ck todo">○</span>Mobile app (React Native)</li>
+        </ul>
+        <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(250,250,239,0.06);text-align:center">
+          <a href="https://github.com/AnshAggr1303/Smart-Inventory-System" target="_blank" class="gh-link">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            github.com/AnshAggr1303/Smart-Inventory-System
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team">
+    <div class="sec-header">
+      <span class="sec-num">06</span>
+      <h2 class="sec-title">Credits</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="team-cards">
+      <div class="team-card">
+        <div class="team-role">Project Guide</div>
+        <div class="team-name">Rajat Goel</div>
+        <div class="team-id">Assistant Professor, CSE</div>
+      </div>
+      <div class="team-card" style="border-color:rgba(61,59,243,0.3)">
+        <div class="team-role">Developer</div>
+        <div class="team-name">Ansh Agrawal</div>
+        <div class="team-id">23FE10CSE00283</div>
+        <div class="team-id" style="margin-top:0.25rem;color:var(--indigo-mid)">@aaahhhhhh_nsh</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THANK YOU -->
+  <div class="thankyou">
+    <h2 class="thankyou-title">Thank You</h2>
+    <p class="thankyou-quote">
+      "My friend still doesn't know this exists.<br>He's going to find out soon."
+    </p>
+    <a href="https://github.com/AnshAggr1303/Smart-Inventory-System" target="_blank" class="gh-link">
+      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+
+</main>
+
+<footer>
+  Manipal University Jaipur &nbsp;·&nbsp; Department of Computer Science & Engineering &nbsp;·&nbsp; 2026
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// TIMER
+let sec=0,tmr=null;
+function startTimer(){
+  tmr=setInterval(()=>{
+    sec++;
+    let m=Math.floor(sec/60),s=sec%60;
+    document.getElementById('time').textContent=
+      `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    const el=document.getElementById('timer');
+    if(sec>=480&&sec<600){
+      el.classList.add('warn');
+    }else if(sec>=600){
+      clearInterval(tmr);
+      el.classList.remove('warn');
+      el.classList.add('stop');
+      document.getElementById('time').textContent='10:00';
+    }
+  },1000);
+}
+
+// CHART
+const ctx=document.getElementById('chart').getContext('2d');
+new Chart(ctx,{
+  type:'bar',
+  data:{
+    labels:['Notebook (manual)','Basic software','Smart Inventory'],
+    datasets:[{
+      label:'Seconds per stock update',
+      data:[120,45,5],
+      backgroundColor:['rgba(250,250,239,0.06)','rgba(250,250,239,0.1)','rgba(61,59,243,0.7)'],
+      borderColor:['rgba(250,250,239,0.1)','rgba(250,250,239,0.15)','rgba(61,59,243,1)'],
+      borderWidth:1,
+      borderRadius:8,
+      barThickness:44,
+    }]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:true,
+    plugins:{
+      legend:{display:false},
+      title:{
+        display:true,
+        text:'Time per stock update (seconds)',
+        color:'rgba(250,250,239,0.3)',
+        font:{size:11,family:"'DM Mono',monospace"},
+        padding:{bottom:20}
+      }
+    },
+    scales:{
+      y:{
+        beginAtZero:true,
+        grid:{color:'rgba(250,250,239,0.04)'},
+        ticks:{color:'rgba(250,250,239,0.3)',font:{size:11,family:"'DM Mono',monospace"}},
+        border:{color:'transparent'}
+      },
+      x:{
+        grid:{display:false},
+        ticks:{color:'rgba(250,250,239,0.4)',font:{size:11,family:"'DM Mono',monospace"}},
+        border:{color:'transparent'}
+      }
+    }
+  }
+});
+</script>
 </body>
 </html>
