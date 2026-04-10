@@ -1,206 +1,460 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory AI | PBL Project Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-        body { background: #ffffff; color: #0f172a; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-        .max-container { max-width: 1200px; margin: 0 auto; }
-        .bento-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 28px; padding: 1.5rem; transition: all 0.3s ease; }
-        .bento-card:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.08); transform: translateY(-2px); }
-        .gradient-text { background: linear-gradient(90deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Inventory — PBL 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --indigo:#1E0CDE;
+  --indigo-mid:#3D3BF3;
+  --indigo-light:#EEEEFD;
+  --surface:#FAFAEF;
+  --surface-low:#F5F4EA;
+  --on-surface:#1B1C16;
+  --muted:#8A897F;
+  --amber:#F59E0B;
+  --green:#10B981;
+  --red:#F43F5E;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--surface-low);
+  color:var(--on-surface);
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;
+  line-height:1.6;
+  min-height:100vh;
+  padding-bottom:4rem;
+}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 2.5rem;
+  background:rgba(250,250,239,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(27,28,22,0.07);
+}
+.nav-logo{display:flex;align-items:center;gap:0.875rem}
+.nav-logo img{
+  height:36px;width:36px;object-fit:contain;
+  border-radius:8px;background:#fff;padding:3px;
+  border:1px solid rgba(27,28,22,0.08);
+}
+.nav-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;letter-spacing:-0.01em;line-height:1.2;color:var(--on-surface)}
+.nav-brand span{color:var(--indigo-mid)}
+.nav-sub{font-size:0.6rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:1px}
+.nav-cta{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:var(--on-surface);color:var(--surface);
+  font-family:'DM Mono',monospace;font-size:0.7rem;
+  letter-spacing:0.08em;text-transform:uppercase;
+  padding:0.6rem 1.25rem;border-radius:999px;
+  text-decoration:none;transition:opacity 0.2s;
+}
+.nav-cta:hover{opacity:0.8}
+
+/* MAIN LAYOUT */
+main{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem;display:flex;flex-direction:column;gap:1.25rem}
+
+/* HERO CARD */
+.hero-card{
+  background:var(--on-surface);
+  color:var(--surface);
+  border-radius:24px;
+  padding:3rem;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:2rem;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero-card::before{
+  content:'';
+  position:absolute;top:-60px;right:-60px;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(61,59,243,0.2) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--indigo-mid);
+  margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;
+}
+.hero-eyebrow::before{content:'';width:24px;height:1px;background:var(--indigo-mid)}
+.hero-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.5rem,5vw,3.5rem);
+  font-weight:800;letter-spacing:-0.03em;line-height:1;
+  margin-bottom:0.875rem;
+}
+.hero-title span{color:rgba(250,250,239,0.3)}
+.hero-desc{font-size:0.9rem;color:rgba(250,250,239,0.5);max-width:480px;line-height:1.7;margin-bottom:1.75rem}
+.hero-actions{display:flex;gap:0.75rem;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:linear-gradient(135deg,var(--indigo),var(--indigo-mid));
+  color:#fff;font-size:0.8rem;font-weight:500;
+  padding:0.7rem 1.5rem;border-radius:999px;
+  text-decoration:none;transition:opacity 0.2s;
+}
+.btn-primary:hover{opacity:0.85}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:rgba(250,250,239,0.07);
+  color:rgba(250,250,239,0.6);font-size:0.8rem;
+  padding:0.7rem 1.5rem;border-radius:999px;
+  border:1px solid rgba(250,250,239,0.12);
+  text-decoration:none;transition:all 0.2s;
+}
+.btn-ghost:hover{background:rgba(250,250,239,0.12);color:var(--surface)}
+
+.hero-badge{
+  background:rgba(61,59,243,0.15);
+  border:1px solid rgba(61,59,243,0.3);
+  border-radius:16px;padding:1.75rem;
+  text-align:center;flex-shrink:0;min-width:140px;
+}
+.hero-badge-num{
+  font-family:'Syne',sans-serif;font-size:2.5rem;
+  font-weight:800;color:var(--indigo-mid);line-height:1;
+  margin-bottom:0.5rem;
+}
+.hero-badge-label{font-size:0.65rem;color:rgba(250,250,239,0.4);text-transform:uppercase;letter-spacing:0.1em}
+
+/* BENTO GRID */
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:1.25rem}
+
+/* CARD BASE */
+.card{
+  background:#fff;
+  border:1px solid rgba(27,28,22,0.07);
+  border-radius:20px;padding:1.75rem;
+  transition:box-shadow 0.2s,transform 0.2s;
+}
+.card:hover{box-shadow:0 8px 24px rgba(27,28,22,0.07);transform:translateY(-1px)}
+.card-label{
+  font-family:'DM Mono',monospace;font-size:0.6rem;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:1.25rem;
+}
+
+/* spans */
+.span-8{grid-column:span 8}
+.span-4{grid-column:span 4}
+.span-6{grid-column:span 6}
+.span-5{grid-column:span 5}
+.span-7{grid-column:span 7}
+.span-12{grid-column:span 12}
+@media(max-width:768px){
+  .span-8,.span-4,.span-6,.span-5,.span-7{grid-column:span 12}
+  nav{padding:1rem 1.25rem}
+  .hero-card{grid-template-columns:1fr;padding:2rem}
+  .hero-badge{display:none}
+  main{padding:1.5rem 1rem}
+}
+
+/* INFO GRID */
+.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.75rem}
+.info-item{
+  background:var(--surface-low);
+  border-radius:12px;padding:1rem;
+}
+.info-key{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--indigo-mid);margin-bottom:0.35rem}
+.info-val{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--on-surface)}
+
+/* TECH PILLS */
+.tech-pills{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.25rem}
+.pill{
+  font-family:'DM Mono',monospace;font-size:0.65rem;
+  letter-spacing:0.05em;padding:0.4rem 0.9rem;
+  border-radius:999px;border:1px solid;
+}
+.pill-indigo{background:rgba(61,59,243,0.06);border-color:rgba(61,59,243,0.2);color:var(--indigo)}
+.pill-green{background:rgba(16,185,129,0.06);border-color:rgba(16,185,129,0.2);color:#059669}
+.pill-amber{background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.2);color:#B45309}
+.pill-slate{background:rgba(27,28,22,0.04);border-color:rgba(27,28,22,0.1);color:var(--muted)}
+
+/* FEATURE LIST */
+.feature-list{display:flex;flex-direction:column;gap:0.625rem;margin-top:0.25rem}
+.feature-item{
+  display:flex;align-items:flex-start;gap:0.875rem;
+  padding:0.875rem 1rem;
+  background:var(--surface-low);
+  border-radius:12px;
+}
+.feature-icon{
+  width:36px;height:36px;flex-shrink:0;
+  border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.9rem;
+}
+.feature-name{font-size:0.85rem;font-weight:500;color:var(--on-surface);margin-bottom:0.15rem}
+.feature-desc{font-size:0.72rem;color:var(--muted);line-height:1.5}
+
+/* STAT GRID */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+.stat-item{
+  background:var(--surface-low);
+  border-radius:12px;padding:1.25rem;text-align:center;
+}
+.stat-num{
+  font-family:'Syne',sans-serif;font-size:2rem;
+  font-weight:800;line-height:1;margin-bottom:0.35rem;
+}
+.stat-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+
+/* TASK LIST */
+.task-list{display:flex;flex-direction:column;gap:0.4rem;margin-top:0.25rem}
+.task-item{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.6rem 0.875rem;
+  border-radius:10px;
+  font-size:0.82rem;
+}
+.task-item.done{background:rgba(16,185,129,0.06);color:var(--on-surface)}
+.task-item.done .ck{color:var(--green);font-family:'DM Mono',monospace;font-size:0.75rem;flex-shrink:0}
+.task-item.pending{background:rgba(27,28,22,0.03);color:var(--muted)}
+.task-item.pending .ck{color:rgba(27,28,22,0.2);font-family:'DM Mono',monospace;font-size:0.75rem;flex-shrink:0}
+
+/* LINKS */
+.link-list{display:flex;flex-direction:column;gap:0.625rem;margin-top:0.25rem}
+.link-item{
+  display:flex;align-items:center;gap:0.875rem;
+  padding:0.875rem 1rem;
+  background:var(--surface-low);
+  border-radius:12px;
+  text-decoration:none;
+  color:var(--on-surface);
+  border:1px solid transparent;
+  transition:border-color 0.2s,background 0.2s;
+}
+.link-item:hover{background:#fff;border-color:rgba(61,59,243,0.2)}
+.link-icon{
+  width:36px;height:36px;flex-shrink:0;
+  border-radius:9px;background:#fff;
+  border:1px solid rgba(27,28,22,0.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.9rem;
+}
+.link-name{font-size:0.85rem;font-weight:500;margin-bottom:0.1rem}
+.link-desc{font-size:0.68rem;color:var(--muted)}
+
+/* ACCENT BORDERS */
+.accent-top-indigo{border-top:3px solid var(--indigo-mid)}
+.accent-top-green{border-top:3px solid var(--green)}
+.accent-top-amber{border-top:3px solid var(--amber)}
+.accent-left-indigo{border-left:3px solid var(--indigo-mid)}
+
+/* FOOTER */
+footer{
+  text-align:center;padding:2rem;
+  font-family:'DM Mono',monospace;
+  font-size:0.62rem;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--muted);
+  border-top:1px solid rgba(27,28,22,0.07);
+  margin-top:1rem;
+}
+</style>
 </head>
-<body class="p-4 md:p-6">
+<body>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 px-8 py-3 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
-                <i class="fas fa-boxes-stacked text-white"></i>
-            </div>
-            <div class="flex flex-col">
-                <span class="text-lg font-black tracking-tight leading-none">Inventory <span class="text-blue-600">AI</span></span>
-                <span class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">PBL Project 2026</span>
-            </div>
-        </div>
-        <a href="pbl_ppt_template.html" class="bg-blue-600 hover:bg-blue-700 px-6 py-2.5 rounded-xl font-bold text-[11px] text-white transition uppercase tracking-widest shadow-md">
-            <i class="fas fa-presentation-screen mr-2"></i>View Presentation
+<nav>
+  <div class="nav-logo">
+    <img src="mujlogo.jpg" alt="MUJ"
+         onerror="this.src='https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Manipal_University_Jaipur_logo.png/220px-Manipal_University_Jaipur_logo.png'">
+    <div>
+      <div class="nav-brand">Smart <span>Inventory</span></div>
+      <div class="nav-sub">PBL 2026 — CSE, MUJ</div>
+    </div>
+  </div>
+  <a href="pbl_2026_v2.html" class="nav-cta">
+    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    Open Presentation
+  </a>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <div class="hero-card">
+    <div>
+      <div class="hero-eyebrow">PBL Mid-Term 2026 &nbsp;·&nbsp; 23FE10CSE00283</div>
+      <h1 class="hero-title">Smart<br><span>Inventory</span></h1>
+      <p class="hero-desc">
+        AI-powered inventory management for any business that holds physical stock.
+        OCR bill scanning, recipe-based auto-deduction, and autonomous AI agents
+        — free to run with your own API keys.
+      </p>
+      <div class="hero-actions">
+        <a href="pbl_2026_v2.html" class="btn-primary">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start Presentation
         </a>
-    </nav>
+        <a href="https://github.com/AnshAggr1303/Smart-Inventory-System" target="_blank" class="btn-ghost">
+          <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+    <div class="hero-badge">
+      <div class="hero-badge-num">9/9</div>
+      <div class="hero-badge-label">Tasks<br>Complete</div>
+    </div>
+  </div>
 
-    <main class="mt-24 space-y-6 max-container">
-        
-        <!-- Hero Section -->
-        <div class="bg-slate-900 rounded-[2.5rem] p-8 md:p-12 text-white shadow-xl">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
-                <div class="text-left">
-                    <div class="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-[10px] font-bold uppercase tracking-widest mb-4">
-                        PBL Mid-Term Evaluation 2026
-                    </div>
-                    <h1 class="text-4xl md:text-5xl font-black tracking-tight leading-none">
-                        <span class="text-white">Inventory</span> <span class="text-blue-400">AI</span>
-                    </h1>
-                    <p class="text-slate-400 font-medium text-lg mt-3 max-w-lg">
-                        An AI-powered inventory management system for multi-outlet food businesses using natural language & bill parsing.
-                    </p>
-                    <div class="flex flex-wrap gap-3 mt-6">
-                        <a href="pbl_ppt_template.html" class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-xl font-bold text-sm transition">
-                            <i class="fas fa-play mr-2"></i>Start Presentation
-                        </a>
-                        <a href="https://github.com/AnshAggr1303/Smart-Inventory-System" target="_blank" class="bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl font-bold text-sm transition border border-white/20">
-                            <i class="fab fa-github mr-2"></i>View Source
-                        </a>
-                    </div>
-                </div>
-                <div class="hidden md:block">
-                    <div class="w-48 h-48 rounded-3xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/10">
-                        <i class="fas fa-robot text-6xl text-blue-400"></i>
-                    </div>
-                </div>
-            </div>
+  <!-- BENTO -->
+  <div class="bento">
+
+    <!-- Project info -->
+    <div class="card span-8 accent-top-indigo">
+      <div class="card-label">Project Details</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-key">Student</div>
+          <div class="info-val">Ansh Agrawal</div>
         </div>
-
-        <!-- Info Cards Grid -->
-        <div class="grid grid-cols-12 gap-5">
-            
-            <!-- Project Info Card -->
-            <div class="col-span-12 lg:col-span-8 bento-card border-t-[6px] border-blue-600">
-                <h2 class="text-[10px] font-black mb-6 tracking-[0.4em] text-slate-400 uppercase">Project Details</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="p-4 bg-slate-50 rounded-2xl">
-                        <p class="text-blue-600 font-black text-xs uppercase tracking-tight mb-1">Student</p>
-                        <p class="font-bold text-slate-900">Ansh Agrawal</p>
-                    </div>
-                    <div class="p-4 bg-slate-50 rounded-2xl">
-                        <p class="text-blue-600 font-black text-xs uppercase tracking-tight mb-1">Reg No</p>
-                        <p class="font-bold text-slate-900 font-mono text-sm">23FE10CSE00283</p>
-                    </div>
-                    <div class="p-4 bg-slate-50 rounded-2xl">
-                        <p class="text-blue-600 font-black text-xs uppercase tracking-tight mb-1">Guide</p>
-                        <p class="font-bold text-slate-900">Rajat Goel</p>
-                    </div>
-                    <div class="p-4 bg-slate-50 rounded-2xl">
-                        <p class="text-blue-600 font-black text-xs uppercase tracking-tight mb-1">Semester</p>
-                        <p class="font-bold text-slate-900">6th (PBL-4)</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Links Card -->
-            <div class="col-span-12 lg:col-span-4 bento-card border-t-[6px] border-purple-500 bg-purple-50/50">
-                <h2 class="text-[10px] font-black mb-6 tracking-[0.4em] text-slate-400 uppercase">Quick Links</h2>
-                <div class="space-y-3">
-                    <a href="pbl_ppt_template.html" class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:border-blue-300 transition group">
-                        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center group-hover:bg-blue-500 transition">
-                            <i class="fas fa-presentation-screen text-blue-600 group-hover:text-white transition"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold text-sm text-slate-900">View Presentation</p>
-                            <p class="text-[10px] text-slate-500">Full PBL slides with timer</p>
-                        </div>
-                    </a>
-                    <a href="https://github.com/AnshAggr1303/Smart-Inventory-System" target="_blank" class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:border-slate-400 transition group">
-                        <div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-800 transition">
-                            <i class="fab fa-github text-slate-600 group-hover:text-white transition"></i>
-                        </div>
-                        <div>
-                            <p class="font-bold text-sm text-slate-900">GitHub Repository</p>
-                            <p class="text-[10px] text-slate-500">Full source code</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Tech Stack Card -->
-            <div class="col-span-12 bento-card border-l-[6px] border-green-500">
-                <h2 class="text-[10px] font-black mb-6 tracking-[0.4em] text-slate-400 uppercase">Technology Stack</h2>
-                <div class="flex flex-wrap gap-3">
-                    <span class="px-4 py-2 rounded-xl bg-blue-50 text-blue-700 font-bold text-sm border border-blue-200">
-                        <i class="fab fa-react mr-2"></i>Next.js 15
-                    </span>
-                    <span class="px-4 py-2 rounded-xl bg-green-50 text-green-700 font-bold text-sm border border-green-200">
-                        <i class="fab fa-node-js mr-2"></i>Express.js
-                    </span>
-                    <span class="px-4 py-2 rounded-xl bg-orange-50 text-orange-700 font-bold text-sm border border-orange-200">
-                        <i class="fas fa-database mr-2"></i>Supabase
-                    </span>
-                    <span class="px-4 py-2 rounded-xl bg-purple-50 text-purple-700 font-bold text-sm border border-purple-200">
-                        <i class="fas fa-brain mr-2"></i>LangGraph
-                    </span>
-                    <span class="px-4 py-2 rounded-xl bg-yellow-50 text-yellow-700 font-bold text-sm border border-yellow-200">
-                        <i class="fas fa-sparkles mr-2"></i>Gemini 2.5
-                    </span>
-                    <span class="px-4 py-2 rounded-xl bg-pink-50 text-pink-700 font-bold text-sm border border-pink-200">
-                        <i class="fab fa-python mr-2"></i>Python
-                    </span>
-                    <span class="px-4 py-2 rounded-xl bg-cyan-50 text-cyan-700 font-bold text-sm border border-cyan-200">
-                        <i class="fas fa-wind mr-2"></i>Tailwind CSS
-                    </span>
-                </div>
-            </div>
-
-            <!-- Features Card -->
-            <div class="col-span-12 md:col-span-6 bento-card">
-                <h2 class="text-[10px] font-black mb-6 tracking-[0.4em] text-slate-400 uppercase">Key Features</h2>
-                <div class="space-y-3">
-                    <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
-                        <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">💬</div>
-                        <div>
-                            <p class="font-bold text-sm">Natural Language Chat</p>
-                            <p class="text-[10px] text-slate-500">Hinglish AI conversation for all operations</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
-                        <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600">📸</div>
-                        <div>
-                            <p class="font-bold text-sm">Bill Image Parsing</p>
-                            <p class="text-[10px] text-slate-500">Upload photo → Auto extract & update stock</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
-                        <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600">🏪</div>
-                        <div>
-                            <p class="font-bold text-sm">Multi-Outlet Tracking</p>
-                            <p class="text-[10px] text-slate-500">Kitchen → Outlets real-time stock visibility</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stats Card -->
-            <div class="col-span-12 md:col-span-6 bento-card bg-gradient-to-br from-blue-50 to-purple-50">
-                <h2 class="text-[10px] font-black mb-6 tracking-[0.4em] text-slate-400 uppercase">Project Stats</h2>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="text-center p-4">
-                        <p class="text-4xl font-black text-blue-600">25</p>
-                        <p class="text-xs text-slate-500 font-bold uppercase">Database Tables</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <p class="text-4xl font-black text-purple-600">15+</p>
-                        <p class="text-xs text-slate-500 font-bold uppercase">AI Tools</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <p class="text-4xl font-black text-green-600">94%</p>
-                        <p class="text-xs text-slate-500 font-bold uppercase">Intent Accuracy</p>
-                    </div>
-                    <div class="text-center p-4">
-                        <p class="text-4xl font-black text-orange-600">1.2s</p>
-                        <p class="text-xs text-slate-500 font-bold uppercase">Avg Response</p>
-                    </div>
-                </div>
-            </div>
-
+        <div class="info-item">
+          <div class="info-key">Reg No</div>
+          <div class="info-val" style="font-family:'DM Mono',monospace;font-size:0.8rem">23FE10CSE00283</div>
         </div>
-    </main>
+        <div class="info-item">
+          <div class="info-key">Guide</div>
+          <div class="info-val">Rajat Goel</div>
+        </div>
+        <div class="info-item">
+          <div class="info-key">Semester</div>
+          <div class="info-val">6th — PBL-4</div>
+        </div>
+      </div>
+    </div>
 
-    <footer class="py-8 text-center text-slate-400 text-[10px] font-bold tracking-[0.4em] uppercase mt-12">
-        Manipal University Jaipur • Department of CSE • 2026
-    </footer>
+    <!-- Quick links -->
+    <div class="card span-4 accent-top-green">
+      <div class="card-label">Quick Links</div>
+      <div class="link-list">
+        <a href="pbl_2026_v2.html" class="link-item">
+          <div class="link-icon">▶</div>
+          <div>
+            <div class="link-name">Presentation</div>
+            <div class="link-desc">Full PBL slides with timer</div>
+          </div>
+        </a>
+        <a href="https://github.com/AnshAggr1303/Smart-Inventory-System" target="_blank" class="link-item">
+          <div class="link-icon">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          </div>
+          <div>
+            <div class="link-name">GitHub Repo</div>
+            <div class="link-desc">Full source code</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Tech stack -->
+    <div class="card span-12 accent-left-indigo">
+      <div class="card-label">Technology Stack</div>
+      <div class="tech-pills">
+        <span class="pill pill-indigo">Next.js 14 App Router</span>
+        <span class="pill pill-indigo">TypeScript Strict</span>
+        <span class="pill pill-indigo">TailwindCSS</span>
+        <span class="pill pill-green">Supabase Postgres</span>
+        <span class="pill pill-green">Supabase Auth</span>
+        <span class="pill pill-green">Supabase Realtime</span>
+        <span class="pill pill-green">Supabase Storage</span>
+        <span class="pill pill-amber">Groq LLM (round-robin)</span>
+        <span class="pill pill-amber">Gemini 2.0 Flash</span>
+        <span class="pill pill-amber">Tesseract.js OCR</span>
+        <span class="pill pill-slate">AES-256-GCM</span>
+        <span class="pill pill-slate">Vercel Cron</span>
+        <span class="pill pill-slate">Postgres Triggers</span>
+        <span class="pill pill-slate">Atomic RPCs</span>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="card span-6">
+      <div class="card-label">Core Features</div>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(61,59,243,0.08);border:1px solid rgba(61,59,243,0.15)">📷</div>
+          <div>
+            <div class="feature-name">OCR Bill Scanner</div>
+            <div class="feature-desc">Tesseract.js + Gemini Vision. Photo → items extracted → stock updated. Handles Indian supplier bill formats.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(61,59,243,0.08);border:1px solid rgba(61,59,243,0.15)">📖</div>
+          <div>
+            <div class="feature-name">Recipe Engine</div>
+            <div class="feature-desc">Define once. Sell a dish — all ingredients deduct atomically. Sufficiency check before every write. Stock never goes negative.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15)">🤖</div>
+          <div>
+            <div class="feature-name">3 AI Agents</div>
+            <div class="feature-desc">Reorder, Shrinkage Detective, Demand Forecaster. All proposals require human approval. Vercel Cron scheduled.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.15)">💬</div>
+          <div>
+            <div class="feature-name">Natural Language Co-pilot</div>
+            <div class="feature-desc">Ask anything about inventory in plain English. Gemini Flash + rule-based fallbacks when keys unavailable.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats + tasks -->
+    <div class="card span-6">
+      <div class="card-label">Project Stats</div>
+      <div class="stat-grid" style="margin-bottom:1.25rem">
+        <div class="stat-item">
+          <div class="stat-num" style="color:var(--indigo-mid)">11</div>
+          <div class="stat-label">DB Tables</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" style="color:var(--green)">3</div>
+          <div class="stat-label">AI Agents</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" style="color:var(--amber)">6</div>
+          <div class="stat-label">Industries</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" style="color:var(--on-surface)">₹0</div>
+          <div class="stat-label">Cost/User</div>
+        </div>
+      </div>
+      <div class="card-label">Delivery</div>
+      <div class="task-list">
+        <div class="task-item done"><span class="ck">✓</span>Auth + 3-step onboarding</div>
+        <div class="task-item done"><span class="ck">✓</span>Live dashboard + inventory</div>
+        <div class="task-item done"><span class="ck">✓</span>OCR bill scanner</div>
+        <div class="task-item done"><span class="ck">✓</span>Recipe engine + deduction</div>
+        <div class="task-item done"><span class="ck">✓</span>Agent system + approval panel</div>
+        <div class="task-item done"><span class="ck">✓</span>Analytics + suppliers</div>
+        <div class="task-item pending"><span class="ck">○</span>WhatsApp + POS integration (Phase 2)</div>
+        <div class="task-item pending"><span class="ck">○</span>Mobile app (Phase 2)</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  Manipal University Jaipur &nbsp;·&nbsp; Department of CSE &nbsp;·&nbsp; 2026
+</footer>
 
 </body>
 </html>
