@@ -9,58 +9,16 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --indigo:#1E0CDE;
-  --indigo-mid:#3D3BF3;
-  --indigo-light:#EEEEFD;
-  --surface:#FAFAEF;
-  --surface-low:#F5F4EA;
-  --on-surface:#1B1C16;
-  --muted:#8A897F;
-  --amber:#F59E0B;
-  --green:#10B981;
-  --red:#F43F5E;
-  --teal:#0F6E56;
+  --indigo:#1E0CDE;--indigo-mid:#3D3BF3;--indigo-light:#EEEEFD;
+  --surface:#FAFAEF;--surface-low:#F5F4EA;--on-surface:#1B1C16;
+  --muted:#8A897F;--amber:#F59E0B;--green:#10B981;--red:#F43F5E;--teal:#0F6E56;
 }
 html{scroll-behavior:smooth}
-body{
-  background:var(--on-surface);
-  color:var(--surface);
-  font-family:'DM Sans',sans-serif;
-  font-size:15px;
-  line-height:1.6;
-  overflow-x:hidden;
-}
+body{background:var(--on-surface);color:var(--surface);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:0.4;}
 
-/* ── NOISE GRAIN OVERLAY ── */
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events:none;
-  z-index:1000;
-  opacity:0.4;
-}
-
-/* ── TIMER ── */
-#timer{
-  position:fixed;
-  bottom:2rem;
-  right:2rem;
-  z-index:999;
-  background:#fff;
-  color:var(--on-surface);
-  border:2px solid var(--indigo-mid);
-  border-radius:999px;
-  padding:0.75rem 1.5rem;
-  font-family:'DM Mono',monospace;
-  font-size:1.1rem;
-  font-weight:500;
-  display:flex;
-  align-items:center;
-  gap:0.75rem;
-  box-shadow:0 8px 32px rgba(0,0,0,0.4);
-}
+/* TIMER */
+#timer{position:fixed;bottom:2rem;right:2rem;z-index:999;background:#fff;color:var(--on-surface);border:2px solid var(--indigo-mid);border-radius:999px;padding:0.75rem 1.5rem;font-family:'DM Mono',monospace;font-size:1.1rem;font-weight:500;display:flex;align-items:center;gap:0.75rem;box-shadow:0 8px 32px rgba(0,0,0,0.4);}
 #timer.warn{border-color:var(--amber);animation:pulse-warn 1s infinite}
 #timer.stop{background:var(--red);color:#fff;border-color:var(--red)}
 @keyframes pulse-warn{0%,100%{background:#fff}50%{background:#FEF3C7}}
@@ -69,452 +27,165 @@ body::before{
 #timer.stop .timer-dot{background:#fff;animation:none}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 
-/* ── NAV ── */
-nav{
-  position:fixed;
-  top:0;left:0;right:0;
-  z-index:100;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:1.25rem 3rem;
-  background:rgba(27,28,22,0.85);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(250,250,239,0.06);
-}
-.nav-logo{
-  display:flex;align-items:center;gap:1rem;
-}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 3rem;background:rgba(27,28,22,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(250,250,239,0.06);}
+.nav-logo{display:flex;align-items:center;gap:1rem;}
 .nav-logo img{height:36px;width:36px;object-fit:contain;border-radius:6px;background:#fff;padding:3px}
 .nav-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;letter-spacing:-0.01em;line-height:1.2}
 .nav-brand span{color:var(--indigo-mid)}
 .nav-sub{font-size:0.6rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:2px}
-.nav-links{display:flex;gap:2.5rem}
+.nav-links{display:flex;gap:2rem}
 .nav-links a{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s}
 .nav-links a:hover{color:var(--surface)}
+.nav-demo{display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,var(--indigo),var(--indigo-mid));color:#fff;font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.5rem 1.1rem;border-radius:999px;text-decoration:none;transition:opacity 0.2s;}
+.nav-demo:hover{opacity:0.85}
 
-/* ── SECTIONS ── */
+/* LAYOUT */
 main{max-width:1100px;margin:0 auto;padding:0 2rem}
 section{padding:7rem 0}
 
-/* ── HERO ── */
-.hero{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding-top:8rem;
-  position:relative;
-}
-.hero-eyebrow{
-  font-family:'DM Mono',monospace;
-  font-size:0.7rem;
-  letter-spacing:0.15em;
-  text-transform:uppercase;
-  color:var(--indigo-mid);
-  margin-bottom:2rem;
-  display:flex;
-  align-items:center;
-  gap:1rem;
-}
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:8rem;position:relative;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--indigo-mid);margin-bottom:2rem;display:flex;align-items:center;gap:1rem;}
 .hero-eyebrow::before{content:'';width:40px;height:1px;background:var(--indigo-mid)}
-.hero-title{
-  font-family:'Syne',sans-serif;
-  font-size:clamp(3.5rem,8vw,6.5rem);
-  font-weight:800;
-  line-height:0.95;
-  letter-spacing:-0.03em;
-  margin-bottom:2rem;
-}
-.hero-title .accent{
-  display:block;
-  color:transparent;
-  -webkit-text-stroke:1px rgba(250,250,239,0.25);
-}
-.hero-title .filled{
-  display:block;
-  background:linear-gradient(135deg,var(--surface) 0%,rgba(250,250,239,0.7) 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.hero-sub{
-  font-size:1.05rem;
-  color:var(--muted);
-  max-width:520px;
-  line-height:1.7;
-  margin-bottom:3rem;
-  padding-left:1.5rem;
-  border-left:2px solid var(--indigo-mid);
-}
-.hero-meta{
-  display:flex;
-  gap:3rem;
-  flex-wrap:wrap;
-}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(3.5rem,8vw,6.5rem);font-weight:800;line-height:0.95;letter-spacing:-0.03em;margin-bottom:2rem;}
+.hero-title .accent{display:block;color:transparent;-webkit-text-stroke:1px rgba(250,250,239,0.25);}
+.hero-title .filled{display:block;background:linear-gradient(135deg,var(--surface) 0%,rgba(250,250,239,0.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{font-size:1.05rem;color:var(--muted);max-width:520px;line-height:1.7;margin-bottom:2rem;padding-left:1.5rem;border-left:2px solid var(--indigo-mid);}
+.hero-actions{display:flex;gap:1rem;margin-bottom:3rem;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,var(--indigo),var(--indigo-mid));color:#fff;font-size:0.85rem;font-weight:500;padding:0.8rem 1.75rem;border-radius:999px;text-decoration:none;transition:opacity 0.2s;}
+.btn-primary:hover{opacity:0.85}
+.btn-ghost{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(250,250,239,0.06);color:rgba(250,250,239,0.6);font-size:0.85rem;padding:0.8rem 1.75rem;border-radius:999px;border:1px solid rgba(250,250,239,0.12);text-decoration:none;transition:all 0.2s;}
+.btn-ghost:hover{background:rgba(250,250,239,0.1);color:var(--surface)}
+.hero-meta{display:flex;gap:3rem;flex-wrap:wrap;}
 .hero-stat{border-top:1px solid rgba(250,250,239,0.1);padding-top:1.25rem}
-.hero-stat-num{
-  font-family:'DM Mono',monospace;
-  font-size:2rem;
-  font-weight:500;
-  color:var(--surface);
-  line-height:1;
-}
-.hero-stat-label{
-  font-size:0.65rem;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--muted);
-  margin-top:0.4rem;
-}
+.hero-stat-num{font-family:'DM Mono',monospace;font-size:2rem;font-weight:500;color:var(--surface);line-height:1;}
+.hero-stat-label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:0.4rem;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(61,59,243,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(61,59,243,0.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
+.hero-glow{position:absolute;top:20%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(61,59,243,0.12) 0%,transparent 70%);pointer-events:none;}
 
-/* Background grid */
-.hero-grid{
-  position:absolute;
-  inset:0;
-  background-image:
-    linear-gradient(rgba(61,59,243,0.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(61,59,243,0.04) 1px,transparent 1px);
-  background-size:60px 60px;
-  pointer-events:none;
-}
-.hero-glow{
-  position:absolute;
-  top:20%;right:-10%;
-  width:500px;height:500px;
-  background:radial-gradient(circle,rgba(61,59,243,0.12) 0%,transparent 70%);
-  pointer-events:none;
-}
-
-/* ── TAGS ── */
-.tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:2.5rem}
-.tag{
-  font-family:'DM Mono',monospace;
-  font-size:0.65rem;
-  letter-spacing:0.08em;
-  padding:0.4rem 0.85rem;
-  border-radius:999px;
-  border:1px solid rgba(250,250,239,0.12);
-  color:var(--muted);
-}
+/* TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:3rem}
+.tag{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.08em;padding:0.4rem 0.85rem;border-radius:999px;border:1px solid rgba(250,250,239,0.12);color:var(--muted);}
 .tag.active{border-color:var(--indigo-mid);color:rgba(250,250,239,0.8)}
 
-/* ── SECTION HEADER ── */
-.sec-header{
-  display:flex;
-  align-items:baseline;
-  gap:1.5rem;
-  margin-bottom:4rem;
-}
-.sec-num{
-  font-family:'DM Mono',monospace;
-  font-size:0.7rem;
-  color:var(--indigo-mid);
-  flex-shrink:0;
-}
-.sec-title{
-  font-family:'Syne',sans-serif;
-  font-size:clamp(1.8rem,4vw,2.8rem);
-  font-weight:700;
-  line-height:1.1;
-  letter-spacing:-0.02em;
-}
+/* SECTION HEADER */
+.sec-header{display:flex;align-items:baseline;gap:1.5rem;margin-bottom:4rem;}
+.sec-num{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--indigo-mid);flex-shrink:0;}
+.sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;line-height:1.1;letter-spacing:-0.02em;}
 .sec-line{flex:1;height:1px;background:rgba(250,250,239,0.06);margin-left:1rem;align-self:center}
 
-/* ── CARDS ── */
-.card{
-  background:rgba(250,250,239,0.03);
-  border:1px solid rgba(250,250,239,0.07);
-  border-radius:16px;
-  padding:2rem;
-  position:relative;
-  overflow:hidden;
-  transition:border-color 0.3s,transform 0.3s;
-}
+/* CARDS */
+.card{background:rgba(250,250,239,0.03);border:1px solid rgba(250,250,239,0.07);border-radius:16px;padding:2rem;position:relative;overflow:hidden;transition:border-color 0.3s,transform 0.3s;}
 .card:hover{border-color:rgba(250,250,239,0.15);transform:translateY(-2px)}
-.card-accent{
-  position:absolute;
-  top:0;left:0;right:0;
-  height:2px;
-}
+.card-accent{position:absolute;top:0;left:0;right:0;height:2px;}
 .card-accent.indigo{background:linear-gradient(90deg,var(--indigo),var(--indigo-mid))}
 .card-accent.amber{background:var(--amber)}
 .card-accent.green{background:var(--green)}
 .card-accent.teal{background:var(--teal)}
 .card-accent.red{background:var(--red)}
-
-.card-icon{
-  width:44px;height:44px;
-  border-radius:10px;
-  background:rgba(61,59,243,0.15);
-  border:1px solid rgba(61,59,243,0.3);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.1rem;
-  margin-bottom:1.25rem;
-}
-.card-title{
-  font-family:'Syne',sans-serif;
-  font-size:1rem;
-  font-weight:700;
-  margin-bottom:0.5rem;
-  letter-spacing:-0.01em;
-}
-.card-sub{
-  font-family:'DM Mono',monospace;
-  font-size:0.65rem;
-  letter-spacing:0.08em;
-  color:var(--indigo-mid);
-  text-transform:uppercase;
-  margin-bottom:0.75rem;
-}
+.card-icon{width:44px;height:44px;border-radius:10px;background:rgba(61,59,243,0.15);border:1px solid rgba(61,59,243,0.3);display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:1.25rem;}
+.card-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem;letter-spacing:-0.01em;}
+.card-sub{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.08em;color:var(--indigo-mid);text-transform:uppercase;margin-bottom:0.75rem;}
 .card-body{font-size:0.85rem;color:var(--muted);line-height:1.7}
 
-/* ── GRID LAYOUTS ── */
+/* GRIDS */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
-@media(max-width:768px){
-  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
-  nav{padding:1rem 1.5rem}
-  .nav-links{display:none}
-  .hero-title{font-size:3rem}
-  main{padding:0 1.25rem}
-}
+@media(max-width:768px){.grid-2,.grid-3{grid-template-columns:1fr}nav{padding:1rem 1.5rem}.nav-links{display:none}.hero-title{font-size:3rem}main{padding:0 1.25rem}}
 
-/* ── CODE BLOCK ── */
-.codeblock{
-  background:#0D0D0B;
-  border:1px solid rgba(250,250,239,0.07);
-  border-radius:10px;
-  padding:1.25rem 1.5rem;
-  font-family:'DM Mono',monospace;
-  font-size:0.78rem;
-  line-height:1.8;
-  color:#9CA3AF;
-  margin-top:1.25rem;
-}
+/* CODE BLOCK */
+.codeblock{background:#0D0D0B;border:1px solid rgba(250,250,239,0.07);border-radius:10px;padding:1.25rem 1.5rem;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.8;color:#9CA3AF;margin-top:1.25rem;}
 .codeblock .comment{color:#3D3BF3;opacity:0.7}
 .codeblock .value{color:#FAFAEF}
 .codeblock .warn{color:var(--amber)}
 .codeblock .ok{color:var(--green)}
 
-/* ── PROBLEM SECTION ── */
+/* PROBLEM */
 .problem-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:3rem;align-items:start}
 .problem-list{list-style:none;margin-top:1.5rem}
-.problem-list li{
-  display:flex;gap:1rem;padding:1rem 0;
-  border-bottom:1px solid rgba(250,250,239,0.06);
-  font-size:0.9rem;color:var(--muted);
-}
+.problem-list li{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(250,250,239,0.06);font-size:0.9rem;color:var(--muted);}
 .problem-list li:last-child{border-bottom:none}
 .problem-list .x{color:var(--red);font-family:'DM Mono',monospace;flex-shrink:0}
 .problem-list strong{color:var(--surface)}
 
-/* ── ARCH LAYERS ── */
-.arch-layer{
-  display:flex;
-  align-items:stretch;
-  gap:0;
-  margin-bottom:1px;
-}
-.arch-label{
-  width:160px;
-  flex-shrink:0;
-  padding:1.25rem 1.5rem;
-  background:rgba(250,250,239,0.02);
-  border:1px solid rgba(250,250,239,0.07);
-  border-right:none;
-  border-radius:12px 0 0 12px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-.arch-label-name{
-  font-family:'Syne',sans-serif;
-  font-size:0.8rem;
-  font-weight:700;
-  margin-bottom:0.25rem;
-}
+/* ARCH LAYERS */
+.arch-layer{display:flex;align-items:stretch;gap:0;margin-bottom:1px;}
+.arch-label{width:160px;flex-shrink:0;padding:1.25rem 1.5rem;background:rgba(250,250,239,0.02);border:1px solid rgba(250,250,239,0.07);border-right:none;border-radius:12px 0 0 12px;display:flex;flex-direction:column;justify-content:center;}
+.arch-label-name{font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;margin-bottom:0.25rem;}
 .arch-label-desc{font-size:0.65rem;color:var(--muted)}
-.arch-items{
-  flex:1;
-  display:flex;
-  flex-wrap:wrap;
-  gap:0.5rem;
-  padding:1rem 1.25rem;
-  background:rgba(250,250,239,0.015);
-  border:1px solid rgba(250,250,239,0.07);
-  border-radius:0 12px 12px 0;
-  align-items:center;
-}
-.arch-pill{
-  font-family:'DM Mono',monospace;
-  font-size:0.65rem;
-  padding:0.3rem 0.75rem;
-  border-radius:999px;
-  background:rgba(61,59,243,0.12);
-  border:1px solid rgba(61,59,243,0.25);
-  color:rgba(250,250,239,0.7);
-  letter-spacing:0.04em;
-}
+.arch-items{flex:1;display:flex;flex-wrap:wrap;gap:0.5rem;padding:1rem 1.25rem;background:rgba(250,250,239,0.015);border:1px solid rgba(250,250,239,0.07);border-radius:0 12px 12px 0;align-items:center;}
+.arch-pill{font-family:'DM Mono',monospace;font-size:0.65rem;padding:0.3rem 0.75rem;border-radius:999px;background:rgba(61,59,243,0.12);border:1px solid rgba(61,59,243,0.25);color:rgba(250,250,239,0.7);letter-spacing:0.04em;}
 
-/* ── TABLES ── */
+/* DB GRID */
 .db-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem}
-.db-item{
-  padding:0.85rem 1rem;
-  background:rgba(250,250,239,0.02);
-  border:1px solid rgba(250,250,239,0.06);
-  border-radius:10px;
-  font-family:'DM Mono',monospace;
-  font-size:0.7rem;
-}
+.db-item{padding:0.85rem 1rem;background:rgba(250,250,239,0.02);border:1px solid rgba(250,250,239,0.06);border-radius:10px;font-family:'DM Mono',monospace;font-size:0.7rem;}
 .db-item .db-name{color:var(--surface);margin-bottom:0.25rem;font-weight:500}
 .db-item .db-desc{color:var(--muted);font-size:0.6rem}
 
-/* ── FEATURES ── */
-.feature-hero{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:1.5rem;
-  margin-bottom:1.5rem;
-}
-.feature-hero .card{grid-column:1}
-.feature-hero .card.wide{grid-column:1/-1}
+/* AI SECTION */
+.ai-row{display:flex;align-items:flex-start;gap:1.5rem;padding:1.5rem 0;border-bottom:1px solid rgba(250,250,239,0.06);}
+.ai-row:last-child{border-bottom:none}
+.ai-num{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--indigo-mid);flex-shrink:0;padding-top:0.2rem;width:24px;}
+.ai-title{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:0.35rem;}
+.ai-body{font-size:0.82rem;color:var(--muted);line-height:1.6}
+.ai-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;padding:0.2rem 0.6rem;border-radius:999px;background:rgba(61,59,243,0.12);border:1px solid rgba(61,59,243,0.25);color:var(--indigo-mid);margin-bottom:0.5rem;}
 
-/* ── RESULTS ── */
-.metric-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:1.5rem 0;
-  border-bottom:1px solid rgba(250,250,239,0.06);
-}
+/* DEMO STRIP */
+.demo-strip{background:rgba(61,59,243,0.08);border:1px solid rgba(61,59,243,0.2);border-radius:16px;padding:2rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;}
+.demo-strip-left h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;}
+.demo-strip-left p{font-size:0.82rem;color:var(--muted);}
+.demo-url{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--indigo-mid);word-break:break-all;}
+
+/* RESULTS */
+.metric-row{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 0;border-bottom:1px solid rgba(250,250,239,0.06);}
 .metric-row:last-child{border-bottom:none}
 .metric-label{font-size:0.85rem;color:var(--muted)}
 .metric-sub{font-size:0.7rem;color:rgba(250,250,239,0.25);margin-top:0.2rem}
-.metric-val{
-  font-family:'DM Mono',monospace;
-  font-size:1.8rem;
-  font-weight:500;
-}
-.metric-val.blue{color:#60A5FA}
-.metric-val.purple{color:#C084FC}
-.metric-val.green{color:var(--green)}
-.metric-val.amber{color:var(--amber)}
+.metric-val{font-family:'DM Mono',monospace;font-size:1.8rem;font-weight:500;}
+.metric-val.blue{color:#60A5FA}.metric-val.purple{color:#C084FC}
+.metric-val.green{color:var(--green)}.metric-val.amber{color:var(--amber)}
 
-/* ── DONE / TODO ── */
+/* CHECKLIST */
 .checklist{list-style:none}
-.checklist li{
-  display:flex;gap:0.75rem;
-  padding:0.6rem 0;
-  font-size:0.85rem;
-  border-bottom:1px solid rgba(250,250,239,0.04);
-  color:var(--muted);
-}
+.checklist li{display:flex;gap:0.75rem;padding:0.6rem 0;font-size:0.85rem;border-bottom:1px solid rgba(250,250,239,0.04);color:var(--muted);}
 .checklist li:last-child{border-bottom:none}
 .checklist .ck{font-family:'DM Mono',monospace;flex-shrink:0}
-.checklist .ck.done{color:var(--green)}
-.checklist .ck.todo{color:rgba(250,250,239,0.2)}
+.checklist .ck.done{color:var(--green)}.checklist .ck.todo{color:rgba(250,250,239,0.2)}
 
-/* ── TEAM ── */
+/* TEAM */
 .team-cards{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:4rem}
-.team-card{
-  padding:2.5rem 3rem;
-  background:rgba(250,250,239,0.02);
-  border:1px solid rgba(250,250,239,0.07);
-  border-radius:16px;
-  text-align:center;
-  min-width:220px;
-}
-.team-role{
-  font-family:'DM Mono',monospace;
-  font-size:0.65rem;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  color:var(--indigo-mid);
-  margin-bottom:0.75rem;
-}
-.team-name{
-  font-family:'Syne',sans-serif;
-  font-size:1.3rem;
-  font-weight:700;
-}
+.team-card{padding:2.5rem 3rem;background:rgba(250,250,239,0.02);border:1px solid rgba(250,250,239,0.07);border-radius:16px;text-align:center;min-width:220px;}
+.team-role{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--indigo-mid);margin-bottom:0.75rem;}
+.team-name{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;}
 .team-id{font-size:0.75rem;color:var(--muted);margin-top:0.4rem;font-family:'DM Mono',monospace}
 
-/* ── THANK YOU ── */
-.thankyou{
-  text-align:center;
-  padding:6rem 0;
-  border-top:1px solid rgba(250,250,239,0.06);
-}
-.thankyou-title{
-  font-family:'Syne',sans-serif;
-  font-size:clamp(3rem,7vw,5rem);
-  font-weight:800;
-  letter-spacing:-0.03em;
-  background:linear-gradient(135deg,var(--surface),rgba(250,250,239,0.4));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  margin-bottom:1rem;
-}
-.thankyou-quote{
-  font-size:0.9rem;
-  color:var(--muted);
-  font-style:italic;
-  max-width:480px;
-  margin:0 auto 2rem;
-  line-height:1.7;
-}
-.gh-link{
-  display:inline-flex;align-items:center;gap:0.75rem;
-  font-family:'DM Mono',monospace;
-  font-size:0.75rem;
-  color:rgba(250,250,239,0.4);
-  text-decoration:none;
-  letter-spacing:0.05em;
-  transition:color 0.2s;
-  border:1px solid rgba(250,250,239,0.1);
-  padding:0.75rem 1.5rem;
-  border-radius:999px;
-}
+/* THANK YOU */
+.thankyou{text-align:center;padding:6rem 0;border-top:1px solid rgba(250,250,239,0.06);}
+.thankyou-title{font-family:'Syne',sans-serif;font-size:clamp(3rem,7vw,5rem);font-weight:800;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--surface),rgba(250,250,239,0.4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem;}
+.thankyou-quote{font-size:0.9rem;color:var(--muted);font-style:italic;max-width:480px;margin:0 auto 2rem;line-height:1.7;}
+.gh-link{display:inline-flex;align-items:center;gap:0.75rem;font-family:'DM Mono',monospace;font-size:0.75rem;color:rgba(250,250,239,0.4);text-decoration:none;letter-spacing:0.05em;transition:color 0.2s;border:1px solid rgba(250,250,239,0.1);padding:0.75rem 1.5rem;border-radius:999px;}
 .gh-link:hover{color:var(--surface);border-color:rgba(250,250,239,0.3)}
 
-/* ── FOOTER ── */
-footer{
-  text-align:center;
-  padding:2rem;
-  font-family:'DM Mono',monospace;
-  font-size:0.6rem;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  color:rgba(250,250,239,0.15);
-  border-top:1px solid rgba(250,250,239,0.04);
-}
+footer{text-align:center;padding:2rem;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(250,250,239,0.15);border-top:1px solid rgba(250,250,239,0.04);}
 
-/* ── ANIMATIONS ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 .fade-up{animation:fadeUp 0.7s ease forwards;opacity:0}
-.fade-up:nth-child(1){animation-delay:0.1s}
-.fade-up:nth-child(2){animation-delay:0.2s}
-.fade-up:nth-child(3){animation-delay:0.3s}
-.fade-up:nth-child(4){animation-delay:0.4s}
-
-/* chart canvas */
+.fade-up:nth-child(1){animation-delay:0.1s}.fade-up:nth-child(2){animation-delay:0.2s}
+.fade-up:nth-child(3){animation-delay:0.3s}.fade-up:nth-child(4){animation-delay:0.4s}
 #chart{max-height:280px}
 </style>
 </head>
 <body onload="startTimer()">
 
-<!-- TIMER -->
 <div id="timer">
   <div class="timer-dot" id="dot"></div>
   <span id="time" style="font-family:'DM Mono',monospace">00:00</span>
 </div>
 
-<!-- NAV -->
 <nav>
   <div class="nav-logo">
-    <img src="mujlogo.jpg" alt="MUJ"
-         onerror="this.src='https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Manipal_University_Jaipur_logo.png/220px-Manipal_University_Jaipur_logo.png'">
+    <img src="mujlogo.jpg" alt="MUJ" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Manipal_University_Jaipur_logo.png/220px-Manipal_University_Jaipur_logo.png'">
     <div>
       <div class="nav-brand">PBL <span>2026</span></div>
       <div class="nav-sub">Dept. of CSE — MUJ</div>
@@ -523,10 +194,14 @@ footer{
   <div class="nav-links">
     <a href="#problem">Problem</a>
     <a href="#architecture">Architecture</a>
+    <a href="#ai">AI Layer</a>
     <a href="#features">Features</a>
     <a href="#results">Results</a>
     <a href="#team">Team</a>
   </div>
+  <a href="https://smart-inventory-rho.vercel.app" target="_blank" class="nav-demo">
+    ▶ Live Demo
+  </a>
 </nav>
 
 <main>
@@ -535,19 +210,15 @@ footer{
   <section class="hero">
     <div class="hero-grid"></div>
     <div class="hero-glow"></div>
-
     <div class="hero-eyebrow fade-up">23FE10CSE00283 &nbsp;·&nbsp; PBL Project 2026</div>
-
     <h1 class="hero-title fade-up">
       <span class="accent">Smart</span>
       <span class="filled">Inventory</span>
     </h1>
-
     <p class="hero-sub fade-up">
       My friend runs 2 food shops in my college and counts stock
       in a notebook every night. I built the fix.
     </p>
-
     <div class="tags fade-up">
       <span class="tag active">Next.js 14</span>
       <span class="tag active">Supabase</span>
@@ -559,24 +230,20 @@ footer{
       <span class="tag">Vercel Cron</span>
       <span class="tag">AES-256-GCM</span>
     </div>
-
-    <div class="hero-meta" style="margin-top:3rem">
-      <div class="hero-stat fade-up">
-        <div class="hero-stat-num" style="color:#60A5FA">9</div>
-        <div class="hero-stat-label">Tasks Shipped</div>
-      </div>
-      <div class="hero-stat fade-up">
-        <div class="hero-stat-num" style="color:#C084FC">11</div>
-        <div class="hero-stat-label">DB Tables</div>
-      </div>
-      <div class="hero-stat fade-up">
-        <div class="hero-stat-num" style="color:var(--green)">3</div>
-        <div class="hero-stat-label">AI Agents</div>
-      </div>
-      <div class="hero-stat fade-up">
-        <div class="hero-stat-num" style="color:var(--amber)">₹0</div>
-        <div class="hero-stat-label">Cost per user</div>
-      </div>
+    <div class="hero-actions fade-up">
+      <a href="https://smart-inventory-rho.vercel.app" target="_blank" class="btn-primary">
+        ▶ &nbsp;Open Live App
+      </a>
+      <a href="https://github.com/AnshAggr1303/smart-inventory" target="_blank" class="btn-ghost">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <div class="hero-meta">
+      <div class="hero-stat fade-up"><div class="hero-stat-num" style="color:#60A5FA">9</div><div class="hero-stat-label">Tasks Shipped</div></div>
+      <div class="hero-stat fade-up"><div class="hero-stat-num" style="color:#C084FC">11</div><div class="hero-stat-label">DB Tables</div></div>
+      <div class="hero-stat fade-up"><div class="hero-stat-num" style="color:var(--green)">3</div><div class="hero-stat-label">AI Agents</div></div>
+      <div class="hero-stat fade-up"><div class="hero-stat-num" style="color:var(--amber)">₹0</div><div class="hero-stat-label">Cost per user</div></div>
     </div>
   </section>
 
@@ -587,44 +254,31 @@ footer{
       <h2 class="sec-title">The Problem</h2>
       <div class="sec-line"></div>
     </div>
-
     <div class="problem-grid">
       <div>
         <p style="font-size:1.05rem;color:var(--muted);line-height:1.8;margin-bottom:1.5rem">
-          Small businesses that hold physical stock — restaurants, pharmacies,
-          kirana stores — are stuck in the same loop. Manual counting. Wasted stock.
-          No visibility. No alerts.
+          Small businesses that hold physical stock — restaurants, pharmacies, kirana stores — are stuck in the same loop. Manual counting. Wasted stock. No visibility. No alerts.
         </p>
         <ul class="problem-list">
           <li><span class="x">—</span><span><strong>Manual counting</strong> every night with a notebook</span></li>
-          <li><span class="x">—</span><span><strong>Over-ordering</strong> paneer weekly because nobody tracks history</span></li>
+          <li><span class="x">—</span><span><strong>Over-ordering</strong> paneer weekly — nobody tracks history</span></li>
           <li><span class="x">—</span><span><strong>Expired stock</strong> thrown away — no expiry alerts</span></li>
-          <li><span class="x">—</span><span><strong>Runs out mid-service</strong> — no forecasting, no reorder automation</span></li>
+          <li><span class="x">—</span><span><strong>Runs out mid-service</strong> — no forecasting, no automation</span></li>
           <li><span class="x">—</span><span><strong>Existing tools</strong> cost ₹2000+/month and require an accountant</span></li>
         </ul>
       </div>
-
       <div style="display:flex;flex-direction:column;gap:1rem">
         <div class="card">
           <div class="card-accent indigo"></div>
           <div class="card-sub">Our approach</div>
-          <div class="card-title">Universal Platform — Any Industry</div>
-          <div class="card-body">
-            Same codebase. Industry selection during onboarding configures
-            labels, templates, and unit defaults. Restaurant calls it "Recipes".
-            Pharmacy calls it "Formulas". Manufacturing calls it "Bill of Materials".
-          </div>
+          <div class="card-title">Universal — Any Industry</div>
+          <div class="card-body">One codebase. Industry selection at onboarding configures labels, templates, and unit defaults. Restaurant calls it "Recipes". Pharmacy calls it "Formulas". Manufacturing calls it "BOM".</div>
         </div>
         <div class="card">
           <div class="card-accent amber"></div>
           <div class="card-sub">Cost model</div>
           <div class="card-title">BYOK — Bring Your Own Keys</div>
-          <div class="card-body">
-            Users bring their own free Groq and Gemini API keys.
-            Platform running cost = near zero.
-            Keys encrypted with AES-256-GCM before storage.
-            Never visible in browser.
-          </div>
+          <div class="card-body">Users bring free Groq and Gemini API keys. Platform cost = near zero. Keys encrypted AES-256-GCM before storage. Never visible in browser.</div>
         </div>
       </div>
     </div>
@@ -637,32 +291,23 @@ footer{
       <h2 class="sec-title">Architecture</h2>
       <div class="sec-line"></div>
     </div>
-
-    <!-- 3 layer arch -->
     <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:3rem">
       <div class="arch-layer">
-        <div class="arch-label">
-          <div class="arch-label-name" style="color:#60A5FA">UI Layer</div>
-          <div class="arch-label-desc">Client-facing</div>
-        </div>
+        <div class="arch-label"><div class="arch-label-name" style="color:#60A5FA">UI Layer</div><div class="arch-label-desc">Client-facing</div></div>
         <div class="arch-items">
           <span class="arch-pill">Next.js 14 App Router</span>
           <span class="arch-pill">Server Components (default)</span>
           <span class="arch-pill">Client Components (when needed)</span>
           <span class="arch-pill">Supabase Realtime</span>
-          <span class="arch-pill">Stitch Design System</span>
           <span class="arch-pill">TailwindCSS</span>
         </div>
       </div>
       <div class="arch-layer">
-        <div class="arch-label">
-          <div class="arch-label-name" style="color:#C084FC">Logic Layer</div>
-          <div class="arch-label-desc">Server-side only</div>
-        </div>
+        <div class="arch-label"><div class="arch-label-name" style="color:#C084FC">Logic Layer</div><div class="arch-label-desc">Server-side only</div></div>
         <div class="arch-items">
           <span class="arch-pill">Server Actions (primary)</span>
           <span class="arch-pill">API Routes (cron + webhooks)</span>
-          <span class="arch-pill">LLM Router (Groq + Gemini)</span>
+          <span class="arch-pill">LLM Router (Groq primary)</span>
           <span class="arch-pill">OCR Pipeline</span>
           <span class="arch-pill">Recipe Engine</span>
           <span class="arch-pill">3 AI Agents</span>
@@ -670,10 +315,7 @@ footer{
         </div>
       </div>
       <div class="arch-layer">
-        <div class="arch-label">
-          <div class="arch-label-name" style="color:var(--green)">Data Layer</div>
-          <div class="arch-label-desc">Supabase</div>
-        </div>
+        <div class="arch-label"><div class="arch-label-name" style="color:var(--green)">Data Layer</div><div class="arch-label-desc">Supabase</div></div>
         <div class="arch-items">
           <span class="arch-pill">Postgres (11 tables)</span>
           <span class="arch-pill">Row Level Security</span>
@@ -684,44 +326,26 @@ footer{
         </div>
       </div>
     </div>
-
-    <!-- Key decisions -->
     <div class="grid-3" style="margin-bottom:3rem">
       <div class="card">
         <div class="card-accent indigo"></div>
         <div class="card-sub">Rule D1</div>
         <div class="card-title">Stock as a Ledger</div>
-        <div class="card-body">
-          <code>current_stock</code> is never updated directly.
-          Every change inserts a row into <code>transactions</code>.
-          A Postgres trigger computes the new balance atomically.
-          Full audit trail. No race conditions. No corruption.
-        </div>
+        <div class="card-body"><code>current_stock</code> is never updated directly. Every change inserts into <code>transactions</code>. A Postgres trigger computes the balance atomically. Full audit trail. Zero corruption.</div>
       </div>
       <div class="card">
         <div class="card-accent amber"></div>
         <div class="card-sub">Rule D2</div>
         <div class="card-title">Atomic Multi-table Writes</div>
-        <div class="card-body">
-          Bill confirmation, recipe deduction, and item creation
-          all use Postgres RPC functions. Either everything commits
-          or nothing does. Partial saves are impossible by design.
-        </div>
+        <div class="card-body">Bill confirmation, recipe deduction, item creation — all use Postgres RPC functions. Either everything commits or nothing does. Partial saves are impossible.</div>
       </div>
       <div class="card">
         <div class="card-accent green"></div>
         <div class="card-sub">Agent design</div>
         <div class="card-title">Human in the Loop</div>
-        <div class="card-body">
-          All three agents write to <code>agent_actions</code>
-          with <code>status: pending</code>. Nothing executes
-          without explicit user approval. Agents propose.
-          Humans decide.
-        </div>
+        <div class="card-body">All agents write to <code>agent_actions</code> with <code>status: pending</code>. Nothing executes without approval. Agents propose. Humans decide.</div>
       </div>
     </div>
-
-    <!-- DB tables -->
     <p style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">Database — 11 tables</p>
     <div class="db-grid">
       <div class="db-item"><div class="db-name">organisations</div><div class="db-desc">Business + industry config</div></div>
@@ -738,152 +362,196 @@ footer{
     </div>
   </section>
 
+  <!-- AI LAYER — new section -->
+  <section id="ai">
+    <div class="sec-header">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">What is AI-Powered</h2>
+      <div class="sec-line"></div>
+    </div>
+
+    <p style="font-size:0.95rem;color:var(--muted);max-width:640px;line-height:1.8;margin-bottom:3rem;padding-left:1.5rem;border-left:2px solid rgba(250,250,239,0.1)">
+      The AI does three things — reads images, understands language, and generates human-readable text. All business logic (stock math, sufficiency checks, variance calculations) is deterministic TypeScript. We kept AI out of the arithmetic deliberately.
+    </p>
+
+    <div class="grid-2" style="margin-bottom:2rem">
+      <div class="card">
+        <div class="card-accent indigo"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--indigo-mid);margin-bottom:1.25rem">Gemini 2.0 Flash Vision</div>
+        <div class="ai-row">
+          <div class="ai-num">1</div>
+          <div>
+            <div class="ai-title">Bill image comprehension</div>
+            <div class="ai-body">Tesseract reads characters. Gemini understands context. It knows "5 kg Paneer Fresh 340.00 1700.00" means item=Paneer, qty=5, unit=kg, rate=340. That is comprehension, not just OCR.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-accent indigo"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--indigo-mid);margin-bottom:1.25rem">Groq llama-3.3-70b-versatile (primary)</div>
+        <div class="ai-row">
+          <div class="ai-num">2</div>
+          <div>
+            <div class="ai-title">Item name matching</div>
+            <div class="ai-body">Bill says "Paneer Fresh", inventory has "Fresh Paneer". A rule-based system creates a duplicate. The LLM understands they are the same item regardless of word order.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem">
+      <div class="card-accent green"></div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:1.25rem">Groq — all three agents</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem">
+        <div class="ai-row" style="padding:0;border:none">
+          <div class="ai-num">3</div>
+          <div>
+            <div class="ai-title">Reorder message drafting</div>
+            <div class="ai-body">The math (how much to order, days remaining) is TypeScript. Converting it into a natural WhatsApp message for a supplier is the LLM — contextual, not a template.</div>
+          </div>
+        </div>
+        <div class="ai-row" style="padding:0;border:none">
+          <div class="ai-num">4</div>
+          <div>
+            <div class="ai-title">Shrinkage analysis</div>
+            <div class="ai-body">The variance calculation is math. Interpreting whether 8% shrinkage on paneer is theft, spillage, or measurement error — that requires language understanding.</div>
+          </div>
+        </div>
+        <div class="ai-row" style="padding:0;border:none">
+          <div class="ai-num">5</div>
+          <div>
+            <div class="ai-title">Natural language co-pilot</div>
+            <div class="ai-body">User asks "how much paneer do I have?" in plain English. The system fetches live data, passes it to Groq with context, and answers naturally. No keyword matching.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(250,250,239,0.02);border:1px solid rgba(250,250,239,0.07);border-radius:12px;padding:1.5rem;display:flex;align-items:center;gap:1.5rem">
+      <div style="font-family:'DM Mono',monospace;font-size:2rem;color:var(--indigo-mid);flex-shrink:0">≠</div>
+      <div style="font-size:0.88rem;color:var(--muted);line-height:1.7">
+        <strong style="color:var(--surface)">AI vs deterministic code — why we separated them.</strong> Stock calculations, sufficiency checks, shrinkage math, and trend detection are all pure TypeScript. If the LLM gets something wrong, it only affects the language output — not the numbers. The ledger is always accurate.
+      </div>
+    </div>
+  </section>
+
   <!-- FEATURES -->
   <section id="features">
     <div class="sec-header">
-      <span class="sec-num">03</span>
+      <span class="sec-num">04</span>
       <h2 class="sec-title">What It Does</h2>
       <div class="sec-line"></div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+    <!-- LIVE DEMO STRIP -->
+    <div class="demo-strip" style="margin-bottom:2rem">
+      <div class="demo-strip-left">
+        <h3>Live and deployed</h3>
+        <p>Full demo available right now — scan a bill, deduct a recipe, trigger an agent.</p>
+        <div class="demo-url" style="margin-top:0.5rem">https://smart-inventory-rho.vercel.app</div>
+      </div>
+      <a href="https://smart-inventory-rho.vercel.app" target="_blank" class="btn-primary">Open App ↗</a>
+    </div>
 
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
       <div class="card">
         <div class="card-accent indigo"></div>
         <div class="card-icon">📷</div>
         <div class="card-sub">Tesseract.js + Gemini 2.0 Flash</div>
         <div class="card-title">OCR Bill Scanner</div>
-        <div class="card-body">
-          Photograph any supplier bill. Client-side Tesseract pre-processes for speed.
-          Gemini Vision extracts items, quantities, units, and prices server-side.
-          Smart token parser handles Indian bill formats across 3 patterns.
-        </div>
+        <div class="card-body">Photograph any supplier bill. Client-side Tesseract preprocesses for speed. Gemini Vision extracts items, quantities, units, prices. Smart token parser handles Indian bill formats.</div>
         <div class="codeblock">
           <span class="comment">// Sample bill → 14 items, one click</span><br>
           <span class="value">Paneer Fresh</span> → 5 kg @ ₹340<br>
-          <span class="value">Maida</span>        → 10 kg @ ₹38<br>
-          <span class="value">Mustard Oil</span>  → 5 litre @ ₹180<br>
+          <span class="value">Maida</span> → 10 kg @ ₹38<br>
+          <span class="value">Mustard Oil</span> → 5 litre @ ₹180<br>
           <span class="ok">→ all added to inventory instantly</span>
         </div>
       </div>
-
       <div class="card">
-        <div class="card-accent purple" style="background:linear-gradient(90deg,#7C3AED,#C084FC)"></div>
+        <div class="card-accent" style="background:linear-gradient(90deg,#7C3AED,#C084FC)"></div>
         <div class="card-icon" style="background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.3)">📖</div>
         <div class="card-sub">Atomic Postgres RPC + Trigger</div>
         <div class="card-title">Recipe Engine</div>
-        <div class="card-body">
-          Define recipes once. Sell a dish — all ingredients deduct automatically.
-          Sufficiency check runs server-side before any write.
-          Stock never goes below zero. Low stock triggers agent actions.
-        </div>
+        <div class="card-body">Define recipes once. Sell a dish — all ingredients deduct automatically. Sufficiency check runs server-side before any write. Stock never goes below zero.</div>
         <div class="codeblock">
           <span class="comment">// Sell 3× Veg Roll</span><br>
           Paneer: -300g &nbsp;<span class="value">340g → 40g</span><br>
-          Maida: &nbsp;-150g &nbsp;<span class="value">680g → 530g</span><br>
-          Mayo: &nbsp;&nbsp;-6g &nbsp;&nbsp;&nbsp;<span class="value">120g → 114g</span><br>
+          Maida: -150g &nbsp;<span class="value">680g → 530g</span><br>
+          Mayo: -6g &nbsp;&nbsp;<span class="value">120g → 114g</span><br>
           <span class="warn">⚠ Paneer below reorder point</span>
         </div>
       </div>
-
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem">
-
       <div class="card" style="grid-column:1/3">
         <div class="card-accent green"></div>
         <div class="card-icon" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3)">🤖</div>
         <div class="card-sub">Groq LLM + Vercel Cron</div>
         <div class="card-title">3 Autonomous AI Agents</div>
-        <div class="card-body" style="margin-bottom:1.25rem">
-          Independent specialist agents sharing state via Supabase. No direct agent-to-agent communication.
-          Every action requires human approval — agents propose, humans decide.
-        </div>
+        <div class="card-body" style="margin-bottom:1.25rem">Independent specialist agents sharing state via Supabase. No agent-to-agent communication. Every action requires human approval.</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem">
           <div style="padding:1rem;background:rgba(61,59,243,0.08);border-radius:10px;border:1px solid rgba(61,59,243,0.2)">
             <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--indigo-mid);text-transform:uppercase;margin-bottom:0.5rem">Reorder</div>
-            <div style="font-size:0.8rem;color:var(--muted)">Drafts WhatsApp supplier message when item hits threshold. 8AM daily + event-triggered.</div>
+            <div style="font-size:0.8rem;color:var(--muted)">Drafts WhatsApp supplier message when item hits threshold. 8AM daily.</div>
           </div>
           <div style="padding:1rem;background:rgba(245,158,11,0.08);border-radius:10px;border:1px solid rgba(245,158,11,0.2)">
             <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--amber);text-transform:uppercase;margin-bottom:0.5rem">Shrinkage</div>
-            <div style="font-size:0.8rem;color:var(--muted)">Weekly variance — expected vs actual. Flags theft or spillage in ₹. Monday 7AM.</div>
+            <div style="font-size:0.8rem;color:var(--muted)">Weekly variance — expected vs actual. Flags losses in ₹. Monday 7AM.</div>
           </div>
           <div style="padding:1rem;background:rgba(15,110,86,0.12);border-radius:10px;border:1px solid rgba(15,110,86,0.3)">
             <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;color:#2dd4bf;text-transform:uppercase;margin-bottom:0.5rem">Forecast</div>
-            <div style="font-size:0.8rem;color:var(--muted)">30-day pattern analysis. Detects weekend demand spikes. 6AM daily briefing.</div>
+            <div style="font-size:0.8rem;color:var(--muted)">30-day pattern analysis. Weekend spike detection. 6AM daily briefing.</div>
           </div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-accent amber"></div>
         <div class="card-icon" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.3)">💬</div>
-        <div class="card-sub">Gemini Flash + Fallbacks</div>
+        <div class="card-sub">Groq primary · Gemini fallback</div>
         <div class="card-title">Co-pilot Chat</div>
-        <div class="card-body" style="margin-bottom:1rem">
-          Ask anything about inventory in plain English.
-          Rule-based fallbacks work even without API keys.
-        </div>
+        <div class="card-body" style="margin-bottom:1rem">Ask anything about inventory in plain English. Rule-based fallbacks work even without API keys.</div>
         <div class="codeblock" style="font-size:0.72rem">
-          <span style="color:rgba(250,250,239,0.3)">you →</span> <span class="value">how much paneer left?</span><br><br>
-          <span style="color:rgba(250,250,239,0.3)">ai &nbsp;→</span> You have <span class="warn">40g</span> of Paneer.<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reorder point is 200g.<br>
+          <span style="color:rgba(250,250,239,0.3)">you →</span> <span class="value">how much paneer?</span><br><br>
+          <span style="color:rgba(250,250,239,0.3)">ai &nbsp;→</span> You have <span class="warn">40g</span>.<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reorder point: 200g.<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--red)">Status: Critical</span>
         </div>
       </div>
-
     </div>
   </section>
 
   <!-- RESULTS -->
   <section id="results">
     <div class="sec-header">
-      <span class="sec-num">04</span>
+      <span class="sec-num">05</span>
       <h2 class="sec-title">Results</h2>
       <div class="sec-line"></div>
     </div>
-
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+      <div><canvas id="chart"></canvas></div>
       <div>
-        <canvas id="chart"></canvas>
-      </div>
-      <div>
-        <div class="metric-row">
-          <div><div class="metric-label">OCR extraction accuracy</div><div class="metric-sub">Indian structured supplier bills</div></div>
-          <div class="metric-val blue">~90%</div>
-        </div>
-        <div class="metric-row">
-          <div><div class="metric-label">Bill → inventory time</div><div class="metric-sub">Photo upload to stock updated</div></div>
-          <div class="metric-val purple">&lt;5s</div>
-        </div>
-        <div class="metric-row">
-          <div><div class="metric-label">Recipe deduction accuracy</div><div class="metric-sub">Atomic, stock never goes negative</div></div>
-          <div class="metric-val green">100%</div>
-        </div>
-        <div class="metric-row">
-          <div><div class="metric-label">Platform cost per user</div><div class="metric-sub">BYOK — user's own free API keys</div></div>
-          <div class="metric-val amber">₹0</div>
-        </div>
-        <div class="metric-row">
-          <div><div class="metric-label">Industries supported</div><div class="metric-sub">One codebase, industry config layer</div></div>
-          <div class="metric-val" style="color:var(--surface)">6</div>
-        </div>
+        <div class="metric-row"><div><div class="metric-label">OCR extraction accuracy</div><div class="metric-sub">Indian structured supplier bills</div></div><div class="metric-val blue">~90%</div></div>
+        <div class="metric-row"><div><div class="metric-label">Bill → inventory time</div><div class="metric-sub">Photo upload to stock updated</div></div><div class="metric-val purple">&lt;5s</div></div>
+        <div class="metric-row"><div><div class="metric-label">Recipe deduction accuracy</div><div class="metric-sub">Atomic, stock never negative</div></div><div class="metric-val green">100%</div></div>
+        <div class="metric-row"><div><div class="metric-label">Platform cost per user</div><div class="metric-sub">BYOK — user's own free keys</div></div><div class="metric-val amber">₹0</div></div>
+        <div class="metric-row"><div><div class="metric-label">Industries supported</div><div class="metric-sub">One codebase, config layer</div></div><div class="metric-val" style="color:var(--surface)">6</div></div>
       </div>
     </div>
   </section>
 
-  <!-- STATUS -->
+  <!-- DELIVERY -->
   <section>
     <div class="sec-header">
-      <span class="sec-num">05</span>
+      <span class="sec-num">06</span>
       <h2 class="sec-title">Delivery</h2>
       <div class="sec-line"></div>
     </div>
-
     <div class="grid-2">
       <div class="card">
         <div class="card-accent green"></div>
-        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:1.5rem">Phase 1 — Shipped</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:1.5rem">Phase 1 — Shipped & Deployed</div>
         <ul class="checklist">
           <li><span class="ck done">✓</span>Supabase Auth — email + Google OAuth</li>
           <li><span class="ck done">✓</span>3-step onboarding with industry picker</li>
@@ -894,29 +562,32 @@ footer{
           <li><span class="ck done">✓</span>Recipe engine with atomic deduction</li>
           <li><span class="ck done">✓</span>3 AI agents — reorder, shrinkage, forecast</li>
           <li><span class="ck done">✓</span>Agent approval panel UI</li>
-          <li><span class="ck done">✓</span>Natural language co-pilot</li>
-          <li><span class="ck done">✓</span>Vercel Cron for scheduled agents</li>
-          <li><span class="ck done">✓</span>6 Postgres RPCs + trigger system</li>
+          <li><span class="ck done">✓</span>Natural language co-pilot (Groq primary)</li>
+          <li><span class="ck done">✓</span>Analytics dashboard</li>
+          <li><span class="ck done">✓</span>Suppliers + Settings pages</li>
         </ul>
       </div>
       <div class="card">
         <div class="card-accent amber"></div>
         <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);margin-bottom:1.5rem">Phase 2 — Roadmap</div>
         <ul class="checklist">
-          <li><span class="ck todo">○</span>WhatsApp bill entry + reorder messages</li>
+          <li><span class="ck todo">○</span>WhatsApp reorder message delivery</li>
           <li><span class="ck todo">○</span>Swiggy / Zomato / POS auto-sync</li>
           <li><span class="ck todo">○</span>Voice stock entry</li>
           <li><span class="ck todo">○</span>Shelf vision camera audit</li>
           <li><span class="ck todo">○</span>Supplier negotiation agent</li>
           <li><span class="ck todo">○</span>Team invites / multi-user org</li>
-          <li><span class="ck todo">○</span>Advanced export + reporting</li>
+          <li><span class="ck todo">○</span>Expiry date + batch tracking</li>
           <li><span class="ck todo">○</span>Mobile app (React Native)</li>
         </ul>
-        <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(250,250,239,0.06);text-align:center">
-          <a href="https://github.com/AnshAggr1303/Smart-Inventory-System" target="_blank" class="gh-link">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-            github.com/AnshAggr1303/Smart-Inventory-System
-          </a>
+        <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(250,250,239,0.06)">
+          <a href="https://smart-inventory-rho.vercel.app" target="_blank" class="btn-primary" style="display:inline-flex;margin-bottom:0.75rem">▶ &nbsp;Live App</a>
+          <div style="margin-top:0.5rem">
+            <a href="https://github.com/AnshAggr1303/smart-inventory" target="_blank" class="gh-link" style="font-size:0.65rem">
+              <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              github.com/AnshAggr1303/smart-inventory
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -925,7 +596,7 @@ footer{
   <!-- TEAM -->
   <section id="team">
     <div class="sec-header">
-      <span class="sec-num">06</span>
+      <span class="sec-num">07</span>
       <h2 class="sec-title">Credits</h2>
       <div class="sec-line"></div>
     </div>
@@ -947,85 +618,38 @@ footer{
   <!-- THANK YOU -->
   <div class="thankyou">
     <h2 class="thankyou-title">Thank You</h2>
-    <p class="thankyou-quote">
-      "My friend still doesn't know this exists.<br>He's going to find out soon."
-    </p>
-    <a href="https://github.com/AnshAggr1303/Smart-Inventory-System" target="_blank" class="gh-link">
-      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-      View on GitHub
-    </a>
+    <p class="thankyou-quote">"My friend still doesn't know this exists.<br>He's going to find out soon."</p>
+    <a href="https://smart-inventory-rho.vercel.app" target="_blank" class="gh-link">▶ &nbsp;smart-inventory-rho.vercel.app</a>
   </div>
 
 </main>
 
-<footer>
-  Manipal University Jaipur &nbsp;·&nbsp; Department of Computer Science & Engineering &nbsp;·&nbsp; 2026
-</footer>
+<footer>Manipal University Jaipur &nbsp;·&nbsp; Department of Computer Science & Engineering &nbsp;·&nbsp; 2026</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// TIMER
 let sec=0,tmr=null;
 function startTimer(){
   tmr=setInterval(()=>{
     sec++;
     let m=Math.floor(sec/60),s=sec%60;
-    document.getElementById('time').textContent=
-      `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    document.getElementById('time').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     const el=document.getElementById('timer');
-    if(sec>=480&&sec<600){
-      el.classList.add('warn');
-    }else if(sec>=600){
-      clearInterval(tmr);
-      el.classList.remove('warn');
-      el.classList.add('stop');
-      document.getElementById('time').textContent='10:00';
-    }
+    if(sec>=480&&sec<600){el.classList.add('warn');}
+    else if(sec>=600){clearInterval(tmr);el.classList.remove('warn');el.classList.add('stop');document.getElementById('time').textContent='10:00';}
   },1000);
 }
-
-// CHART
 const ctx=document.getElementById('chart').getContext('2d');
 new Chart(ctx,{
   type:'bar',
   data:{
     labels:['Notebook (manual)','Basic software','Smart Inventory'],
-    datasets:[{
-      label:'Seconds per stock update',
-      data:[120,45,5],
-      backgroundColor:['rgba(250,250,239,0.06)','rgba(250,250,239,0.1)','rgba(61,59,243,0.7)'],
-      borderColor:['rgba(250,250,239,0.1)','rgba(250,250,239,0.15)','rgba(61,59,243,1)'],
-      borderWidth:1,
-      borderRadius:8,
-      barThickness:44,
-    }]
+    datasets:[{label:'Seconds per stock update',data:[120,45,5],backgroundColor:['rgba(250,250,239,0.06)','rgba(250,250,239,0.1)','rgba(61,59,243,0.7)'],borderColor:['rgba(250,250,239,0.1)','rgba(250,250,239,0.15)','rgba(61,59,243,1)'],borderWidth:1,borderRadius:8,barThickness:44}]
   },
   options:{
-    responsive:true,
-    maintainAspectRatio:true,
-    plugins:{
-      legend:{display:false},
-      title:{
-        display:true,
-        text:'Time per stock update (seconds)',
-        color:'rgba(250,250,239,0.3)',
-        font:{size:11,family:"'DM Mono',monospace"},
-        padding:{bottom:20}
-      }
-    },
-    scales:{
-      y:{
-        beginAtZero:true,
-        grid:{color:'rgba(250,250,239,0.04)'},
-        ticks:{color:'rgba(250,250,239,0.3)',font:{size:11,family:"'DM Mono',monospace"}},
-        border:{color:'transparent'}
-      },
-      x:{
-        grid:{display:false},
-        ticks:{color:'rgba(250,250,239,0.4)',font:{size:11,family:"'DM Mono',monospace"}},
-        border:{color:'transparent'}
-      }
-    }
+    responsive:true,maintainAspectRatio:true,
+    plugins:{legend:{display:false},title:{display:true,text:'Time per stock update (seconds)',color:'rgba(250,250,239,0.3)',font:{size:11,family:"'DM Mono',monospace"},padding:{bottom:20}}},
+    scales:{y:{beginAtZero:true,grid:{color:'rgba(250,250,239,0.04)'},ticks:{color:'rgba(250,250,239,0.3)',font:{size:11,family:"'DM Mono',monospace"}},border:{color:'transparent'}},x:{grid:{display:false},ticks:{color:'rgba(250,250,239,0.4)',font:{size:11,family:"'DM Mono',monospace"}},border:{color:'transparent'}}}
   }
 });
 </script>
